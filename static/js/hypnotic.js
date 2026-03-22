@@ -269,24 +269,6 @@
     });
 
 
-    // ── Scroll Reveal for Prose Elements ──
-    const observer = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('prose-visible');
-            }
-        });
-    }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
-
-    // Observe all prose children after a brief delay (let initial animations play)
-    setTimeout(function () {
-        document.querySelectorAll('.prose > *').forEach(function (el) {
-            // Reset animation for scroll-based reveal
-            el.style.animation = 'none';
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(20px)';
-            observer.observe(el);
-        });
-    }, 500);
+    // Content is always visible — no scroll-based hiding
 
 })();
