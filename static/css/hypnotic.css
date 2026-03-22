@@ -14,9 +14,8 @@
     pointer-events: none;
 }
 
-/* Hide the default starfield on post pages */
-.post-detail ~ #cosmic-bg,
-#cosmic-bg {
+/* Reduce starfield only on post detail pages (via body class) */
+body.page-post-detail #cosmic-bg {
     opacity: 0.2;
 }
 
@@ -163,30 +162,15 @@
     50% { opacity: 1; transform: scale(1.3); }
 }
 
-/* Paragraphs — subtle fade-in on scroll (enhanced by JS) */
-.post-detail .prose p {
-    opacity: 0;
-    transform: translateY(20px);
-    animation: prose-reveal 0.8s ease forwards;
-}
-
-.post-detail .prose p:nth-child(1) { animation-delay: 0.1s; }
-.post-detail .prose p:nth-child(2) { animation-delay: 0.2s; }
-.post-detail .prose p:nth-child(3) { animation-delay: 0.3s; }
-.post-detail .prose p:nth-child(4) { animation-delay: 0.4s; }
-.post-detail .prose p:nth-child(5) { animation-delay: 0.5s; }
-.post-detail .prose h2 { animation: prose-reveal 0.8s ease forwards; animation-delay: 0.2s; opacity: 0; transform: translateY(20px); }
-.post-detail .prose blockquote { animation: prose-reveal 0.8s ease forwards; animation-delay: 0.3s; opacity: 0; transform: translateY(20px); }
-
-/* Scroll-triggered reveal class added by JS */
-.prose-visible {
-    opacity: 1 !important;
-    transform: translateY(0) !important;
-    transition: opacity 0.8s ease, transform 0.8s ease;
-}
-
-@keyframes prose-reveal {
-    to { opacity: 1; transform: translateY(0); }
+/* Paragraphs — always visible, no animation-based hiding */
+.post-detail .prose p,
+.post-detail .prose h2,
+.post-detail .prose h3,
+.post-detail .prose h4,
+.post-detail .prose blockquote,
+.post-detail .prose div {
+    opacity: 1;
+    transform: none;
 }
 
 /* ---------- Vedanta Sidebar Enhancement ---------- */
