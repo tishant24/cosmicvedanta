@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}{{ site_name }} - Daily Universe Feed{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="cosmic-hero">
+    <div class="hero-content">
+        <h1 class="hero-title">
+            <span class="hero-glow">Explore the Cosmos.</span>
+            <span class="hero-sub">Awaken Consciousness.</span>
+        </h1>
+        <p class="hero-tagline">
+            Daily articles bridging ancient Vedantic wisdom with modern cosmology
+            and the mysteries of Simulation Theory.
+        </p>
+        {% if not user.is_authenticated %}
+        <div class="hero-cta">
+            <a href="{% url 'accounts:signup' %}" class="cosmic-btn cosmic-btn-lg cosmic-btn-glow">
+                Begin Your Journey
+            </a>
+        </div>
+        {% endif %}
+    </div>
+    <div class="hero-mandala"></div>
+</section>
+
+<!-- Ad placement: top banner -->
+<div class="ad-slot ad-slot-banner" id="ad-top-banner">
+    <span class="ad-label">Ad Space</span>
+</div>
+
+<!-- Featured Posts -->
+{% if featured_posts %}
+<section class="section">
+    <div class="section-container">
+        <h2 class="section-title">
+            <span class="title-ornament">&#10038;</span> Featured Explorations
+        </h2>
+        <div class="featured-grid">
+            {% for post in featured_posts %}
+            <article class="featured-card">
+                <a href="{{ post.get_absolute_url }}">
+                    {% if post.featured_image %}
+                    <div class="card-image" style="background-image: url('{{ post.featured_image.url }}')"></div>
+                    {% else %}
+                    <div class="card-image card-image-placeholder">
+                        <span class="card-cosmos-icon">&#9733;</span>
+                    </div>
+                    {% endif %}
+                    <div class="card-body">
+                        {% if post.category %}
+                        <span class="card-category">{{ post.category.name }}</span>
+                        {% endif %}
+                        <h3 class="card-title">{{ post.title }}</h3>
+                        <p class="card-excerpt">{{ post.excerpt|truncatewords:25 }}</p>
+                        <div class="card-meta">
+                            <span>{{ post.published_at|naturalday }}</span>
+                            <span>{{ post.view_count|intcomma }} views</span>
+                        </div>
+                    </div>
+                </a>
+            </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Vedanta Quote Sidebar -->
+<section class="vedanta-banner">
+    <div class="section-container">
+        <blockquote class="vedanta-quote-block">
+            <p class="vedanta-text">
+                "Brahman alone is real, the world is appearance,
+                and the individual self is none other than Brahman."
+            </p>
+            <cite class="vedanta-cite">&#8212; Adi Shankaracharya, Vivekachudamani</cite>
+        </blockquote>
+    </div>
+</section>
+
+<!-- Daily Feed -->
+<section class="section">
+    <div class="section-container">
+        <h2 class="section-title">
+            <span class="title-ornament">&#9788;</span> Daily Universe Feed
+        </h2>
+
+        <!-- Ad placement: in-feed -->
+        <div class="ad-slot ad-slot-inline" id="ad-in-feed">
+            <span class="ad-label">Ad Space</span>
+        </div>
+
+        <div class="posts-grid">
+            {% for post in posts %}
+            <article class="post-card">
+                <a href="{{ post.get_absolute_url }}">
+                    {% if post.featured_image %}
+                    <div class="card-image card-image-sm" style="background-image: url('{{ post.featured_image.url }}')"></div>
+                    {% else %}
+                    <div class="card-image card-image-sm card-image-placeholder">
+                        <span class="card-cosmos-icon">&#10037;</span>
+                    </div>
+                    {% endif %}
+                    <div class="card-body">
+                        {% if post.category %}
+                        <span class="card-category">{{ post.category.name }}</span>
+                        {% endif %}
+                        <h3 class="card-title">{{ post.title }}</h3>
+                        <p class="card-excerpt">{{ post.excerpt|truncatewords:20 }}</p>
+                        <div class="card-meta">
+                            <span>by {{ post.author.get_short_name }}</span>
+                            <span>{{ post.published_at|naturalday }}</span>
+                        </div>
+                        {% if post.is_premium %}
+                        <span class="premium-badge">Premium</span>
+                        {% endif %}
+                    </div>
+                </a>
+            </article>
+            {% empty %}
+            <div class="empty-state">
+                <p class="empty-icon">&#127760;</p>
+                <p>The cosmos is being written... Check back soon for new articles.</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if posts.has_other_pages %}
+        <nav class="pagination">
+            {% if posts.has_previous %}
+            <a href="?page={{ posts.previous_page_number }}" class="cosmic-btn cosmic-btn-outline">&laquo; Previous</a>
+            {% endif %}
+            <span class="page-info">Page {{ posts.number }} of {{ posts.paginator.num_pages }}</span>
+            {% if posts.has_next %}
+            <a href="?page={{ posts.next_page_number }}" class="cosmic-btn cosmic-btn-outline">Next &raquo;</a>
+            {% endif %}
+        </nav>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Newsletter CTA Banner -->
+<section class="cta-banner">
+    <div class="section-container">
+        <div class="cta-content">
+            <div class="cta-icon">&#9993;</div>
+            <h2 class="cta-title">Join Our Cosmic Community</h2>
+            <p class="cta-desc">
+                Receive daily insights on the universe, consciousness, and the nature of reality.
+                Free forever. Unsubscribe anytime.
+            </p>
+            <form method="post" action="{% url 'newsletter:subscribe' %}" class="cta-form">
+                {% csrf_token %}
+                <div class="cta-inputs">
+                    <input type="email" name="email" placeholder="Email address" class="cosmic-input" required>
+                    <input type="text" name="mobile" placeholder="Or mobile number (optional)" class="cosmic-input">
+                </div>
+                <button type="submit" class="cosmic-btn cosmic-btn-lg cosmic-btn-glow">
+                    Subscribe to the Cosmos
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- Simulation Theory Sidebar -->
+<section class="simulation-banner">
+    <div class="section-container">
+        <div class="simulation-card">
+            <h3 class="simulation-title">Are We Living in a Simulation?</h3>
+            <p class="simulation-text">
+                "If the universe is a simulation, then consciousness is the player,
+                Vedanta is the source code, and enlightenment is the realization
+                that you are the programmer."
+            </p>
+            <div class="simulation-glitch"></div>
+        </div>
+    </div>
+</section>
+{% endblock %}

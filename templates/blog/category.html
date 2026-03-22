@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block title %}{{ category.name }} | {{ site_name }}{% endblock %}
+{% block meta_description %}Explore {{ category.name }} articles on {{ site_name }}. {{ category.description }}{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="section-container">
+        <header class="category-header">
+            <h1 class="section-title">
+                <span class="title-ornament">&#10038;</span> {{ category.name }}
+            </h1>
+            {% if category.description %}
+            <p class="category-desc">{{ category.description }}</p>
+            {% endif %}
+        </header>
+
+        <div class="posts-grid">
+            {% for post in posts %}
+            <article class="post-card">
+                <a href="{{ post.get_absolute_url }}">
+                    {% if post.featured_image %}
+                    <div class="card-image card-image-sm" style="background-image: url('{{ post.featured_image.url }}')"></div>
+                    {% else %}
+                    <div class="card-image card-image-sm card-image-placeholder">
+                        <span class="card-cosmos-icon">&#10037;</span>
+                    </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h3 class="card-title">{{ post.title }}</h3>
+                        <p class="card-excerpt">{{ post.excerpt|truncatewords:20 }}</p>
+                        <div class="card-meta">
+                            <span>{{ post.published_at|naturalday }}</span>
+                            <span>{{ post.view_count|intcomma }} views</span>
+                        </div>
+                    </div>
+                </a>
+            </article>
+            {% empty %}
+            <div class="empty-state">
+                <p class="empty-icon">&#127760;</p>
+                <p>No articles in this category yet. The cosmos is still unfolding...</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if posts.has_other_pages %}
+        <nav class="pagination">
+            {% if posts.has_previous %}
+            <a href="?page={{ posts.previous_page_number }}" class="cosmic-btn cosmic-btn-outline">&laquo; Previous</a>
+            {% endif %}
+            <span class="page-info">Page {{ posts.number }} of {{ posts.paginator.num_pages }}</span>
+            {% if posts.has_next %}
+            <a href="?page={{ posts.next_page_number }}" class="cosmic-btn cosmic-btn-outline">Next &raquo;</a>
+            {% endif %}
+        </nav>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

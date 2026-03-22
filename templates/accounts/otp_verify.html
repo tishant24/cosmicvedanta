@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Verify Mobile | {{ site_name }}{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="auth-icon">&#128272;</div>
+                <h1 class="auth-title">Verify Your Mobile</h1>
+                <p class="auth-subtitle">Enter the 6-digit OTP sent to your mobile number</p>
+            </div>
+
+            <form method="post" class="auth-form" novalidate>
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="id_otp_code">OTP Code</label>
+                    {{ form.otp_code }}
+                </div>
+                <button type="submit" class="cosmic-btn cosmic-btn-lg cosmic-btn-full cosmic-btn-glow">
+                    Verify
+                </button>
+            </form>
+
+            <p class="auth-footer">
+                Didn't receive the code? <a href="#" onclick="alert('OTP resend placeholder - integrate SMS provider here')">Resend OTP</a>
+            </p>
+        </div>
+    </div>
+</section>
+{% endblock %}

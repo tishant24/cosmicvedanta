@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}Login | {{ site_name }}{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="auth-icon">&#9790;</div>
+                <h1 class="auth-title">Welcome Back</h1>
+                <p class="auth-subtitle">Login with your email or mobile number</p>
+            </div>
+
+            {% if form.errors %}
+            <div class="cosmic-alert cosmic-alert-error">
+                <p>Invalid credentials. Please try again.</p>
+            </div>
+            {% endif %}
+
+            <form method="post" class="auth-form" novalidate>
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="id_username">Email or Mobile</label>
+                    {{ form.username }}
+                </div>
+                <div class="form-group">
+                    <label for="id_password">Password</label>
+                    {{ form.password }}
+                </div>
+                <button type="submit" class="cosmic-btn cosmic-btn-lg cosmic-btn-full cosmic-btn-glow">
+                    Enter the Cosmos
+                </button>
+            </form>
+
+            <p class="auth-footer">
+                New to the journey? <a href="{% url 'accounts:signup' %}">Create an account</a>
+            </p>
+        </div>
+    </div>
+</section>
+{% endblock %}

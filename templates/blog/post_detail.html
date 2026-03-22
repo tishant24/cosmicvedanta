@@ -1,0 +1,228 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}{{ post.get_seo_title }} | {{ site_name }}{% endblock %}
+{% block meta_description %}{{ post.get_seo_description }}{% endblock %}
+{% block meta_keywords %}{{ post.meta_keywords }}{% endblock %}
+{% block og_type %}article{% endblock %}
+{% block og_title %}{{ post.get_seo_title }}{% endblock %}
+{% block og_description %}{{ post.get_seo_description }}{% endblock %}
+{% block og_url %}{{ post.get_absolute_url }}{% endblock %}
+{% block canonical %}{{ post.get_absolute_url }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/hypnotic.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Hypnotic Consciousness Canvas -->
+<canvas id="consciousness-bg"></canvas>
+
+<article class="post-detail">
+    <header class="post-header">
+        <div class="section-container">
+            {% if post.category %}
+            <a href="{{ post.category.get_absolute_url }}" class="post-category-tag">{{ post.category.name }}</a>
+            {% endif %}
+            <h1 class="post-title">{{ post.title }}</h1>
+            <div class="post-meta-bar">
+                <div class="post-author-info">
+                    {% if post.author.avatar %}
+                    <img src="{{ post.author.avatar.url }}" alt="{{ post.author.get_short_name }}" class="author-avatar">
+                    {% else %}
+                    <div class="author-avatar author-avatar-placeholder">&#9733;</div>
+                    {% endif %}
+                    <div>
+                        <span class="author-name">{{ post.author.get_short_name }}</span>
+                        <span class="post-date">{{ post.published_at|naturalday }} &middot; {{ post.view_count|intcomma }} views</span>
+                    </div>
+                </div>
+                {% if post.is_premium %}
+                <span class="premium-badge premium-badge-lg">Premium Content</span>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    {% if post.featured_image %}
+    <div class="post-hero-image">
+        <img src="{{ post.featured_image.url }}" alt="{{ post.title }}">
+    </div>
+    {% endif %}
+
+    <!-- Ad placement: before content -->
+    <div class="ad-slot ad-slot-inline" id="ad-pre-content">
+        <span class="ad-label">Ad Space</span>
+    </div>
+
+    <div class="post-body-container">
+        <div class="section-container post-layout">
+            <!-- Main Content -->
+            <div class="post-content">
+                <!-- Vedanta Quote Block -->
+                {% if post.vedanta_quote %}
+                <aside class="vedanta-sidebar">
+                    <div class="vedanta-ornament">&#2384;</div>
+                    <blockquote class="vedanta-inline-quote">
+                        <p>{{ post.vedanta_quote }}</p>
+                        {% if post.vedanta_source %}
+                        <cite>&#8212; {{ post.vedanta_source }}</cite>
+                        {% endif %}
+                    </blockquote>
+                </aside>
+                {% endif %}
+
+                <div class="post-body prose">
+                    {{ post.body|safe }}
+                </div>
+
+                <!-- Ad placement: after content -->
+                <div class="ad-slot ad-slot-inline" id="ad-post-content">
+                    <span class="ad-label">Ad Space</span>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <aside class="post-sidebar">
+                <!-- Newsletter CTA -->
+                <div class="sidebar-card cta-sidebar-card">
+                    <div class="cta-icon-sm">&#9993;</div>
+                    <h4>Cosmic Newsletter</h4>
+                    <p>Get daily wisdom delivered to your inbox.</p>
+                    <form method="post" action="{% url 'newsletter:subscribe' %}">
+                        {% csrf_token %}
+                        <input type="email" name="email" placeholder="your@email.com" class="cosmic-input" required>
+                        <button type="submit" class="cosmic-btn cosmic-btn-sm cosmic-btn-full">Subscribe</button>
+                    </form>
+                </div>
+
+                <!-- Ad placement: sidebar -->
+                <div class="ad-slot ad-slot-sidebar" id="ad-sidebar">
+                    <span class="ad-label">Ad Space</span>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Related Posts -->
+    {% if related_posts %}
+    <section class="section related-section">
+        <div class="section-container">
+            <h2 class="section-title">
+                <span class="title-ornament">&#10038;</span> Continue Exploring
+            </h2>
+            <div class="posts-grid">
+                {% for rp in related_posts %}
+                <article class="post-card">
+                    <a href="{{ rp.get_absolute_url }}">
+                        {% if rp.featured_image %}
+                        <div class="card-image card-image-sm" style="background-image: url('{{ rp.featured_image.url }}')"></div>
+                        {% else %}
+                        <div class="card-image card-image-sm card-image-placeholder">
+                            <span class="card-cosmos-icon">&#10037;</span>
+                        </div>
+                        {% endif %}
+                        <div class="card-body">
+                            <h3 class="card-title">{{ rp.title }}</h3>
+                            <p class="card-excerpt">{{ rp.excerpt|truncatewords:15 }}</p>
+                        </div>
+                    </a>
+                </article>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Comments Section -->
+    <section class="section comments-section" id="comments">
+        <div class="section-container">
+            <h2 class="section-title">
+                <span class="title-ornament">&#9883;</span> Cosmic Discussion
+                <span class="comment-count">({{ comments|length }})</span>
+            </h2>
+
+            <!-- Comment Form -->
+            {% if user.is_authenticated %}
+            <div class="comment-form-wrapper">
+                <form method="post" action="{% url 'blog:add_comment' slug=post.slug %}" class="comment-form">
+                    {% csrf_token %}
+                    {{ comment_form.body }}
+                    <div class="comment-form-actions">
+                        <button type="submit" class="cosmic-btn">Post Comment</button>
+                    </div>
+                </form>
+            </div>
+            {% else %}
+            <div class="comment-login-prompt">
+                <p>
+                    <a href="{% url 'accounts:login' %}?next={{ request.path }}%23comments">Log in</a> or
+                    <a href="{% url 'accounts:signup' %}">join the community</a> to share your thoughts.
+                </p>
+            </div>
+            {% endif %}
+
+            <!-- Comments List -->
+            <div class="comments-list">
+                {% for comment in comments %}
+                <div class="comment" id="comment-{{ comment.pk }}">
+                    <div class="comment-header">
+                        <div class="comment-avatar">{{ comment.author.get_short_name|first }}</div>
+                        <div class="comment-meta">
+                            <span class="comment-author">{{ comment.author.get_short_name }}</span>
+                            <span class="comment-time">{{ comment.created_at|naturaltime }}</span>
+                        </div>
+                    </div>
+                    <div class="comment-body">{{ comment.body|linebreaks }}</div>
+
+                    {% if user.is_authenticated %}
+                    <button class="reply-toggle" onclick="toggleReplyForm({{ comment.pk }})">Reply</button>
+                    <div class="reply-form-wrapper" id="reply-form-{{ comment.pk }}" style="display: none;">
+                        <form method="post" action="{% url 'blog:add_comment' slug=post.slug %}" class="comment-form reply-form">
+                            {% csrf_token %}
+                            <input type="hidden" name="parent_id" value="{{ comment.pk }}">
+                            <textarea name="body" class="cosmic-input" rows="3" placeholder="Reply to {{ comment.author.get_short_name }}..."></textarea>
+                            <button type="submit" class="cosmic-btn cosmic-btn-sm">Reply</button>
+                        </form>
+                    </div>
+                    {% endif %}
+
+                    <!-- Nested Replies -->
+                    {% for reply in comment.replies.all %}
+                    <div class="comment comment-reply" id="comment-{{ reply.pk }}">
+                        <div class="comment-header">
+                            <div class="comment-avatar comment-avatar-sm">{{ reply.author.get_short_name|first }}</div>
+                            <div class="comment-meta">
+                                <span class="comment-author">{{ reply.author.get_short_name }}</span>
+                                <span class="comment-time">{{ reply.created_at|naturaltime }}</span>
+                            </div>
+                        </div>
+                        <div class="comment-body">{{ reply.body|linebreaks }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% empty %}
+                <div class="empty-state">
+                    <p class="empty-icon">&#128172;</p>
+                    <p>Be the first to share your cosmic perspective.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+</article>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function toggleReplyForm(commentId) {
+    const form = document.getElementById('reply-form-' + commentId);
+    form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    if (form.style.display === 'block') {
+        form.querySelector('textarea').focus();
+    }
+}
+</script>
+<script src="{% static 'js/hypnotic.js' %}"></script>
+{% endblock %}

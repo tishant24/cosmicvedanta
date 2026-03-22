@@ -1,0 +1,293 @@
+/* ============================================================
+   Hypnotic Consciousness Layer
+   Infinity inside the human mind — you cannot look away
+   ============================================================ */
+
+/* The consciousness canvas sits behind content */
+#consciousness-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Hide the default starfield on post pages */
+.post-detail ~ #cosmic-bg,
+#cosmic-bg {
+    opacity: 0.2;
+}
+
+/* ---------- Hypnotic Post Typography ---------- */
+
+.post-detail .post-title {
+    background: linear-gradient(
+        135deg,
+        #f0c040 0%,
+        #a78bfa 25%,
+        #22d3ee 50%,
+        #f472b6 75%,
+        #f0c040 100%
+    );
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: title-shift 8s ease infinite;
+}
+
+@keyframes title-shift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+/* Intro text breathes */
+.post-intro {
+    font-size: 1.4rem !important;
+    font-weight: 600;
+    text-align: center;
+    color: #a78bfa;
+    letter-spacing: 0.02em;
+    animation: text-breathe 4s ease-in-out infinite;
+    margin-bottom: 2rem !important;
+}
+
+@keyframes text-breathe {
+    0%, 100% { opacity: 0.7; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.02); }
+}
+
+/* Closing paragraph — ethereal glow */
+.post-closing {
+    position: relative;
+    font-size: 1.2rem !important;
+    font-weight: 600;
+    text-align: center;
+    padding: 2.5rem 2rem !important;
+    margin-top: 3rem !important;
+    background: linear-gradient(135deg, rgba(167, 139, 250, 0.06), rgba(240, 192, 64, 0.06));
+    border-radius: 16px;
+    border: 1px solid rgba(167, 139, 250, 0.15);
+}
+
+.post-closing::before {
+    content: '\221E';  /* infinity symbol */
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 2.5rem;
+    color: #f0c040;
+    opacity: 0.6;
+    animation: infinity-pulse 3s ease-in-out infinite;
+}
+
+@keyframes infinity-pulse {
+    0%, 100% { opacity: 0.3; transform: translateX(-50%) scale(1) rotate(0deg); }
+    50% { opacity: 0.8; transform: translateX(-50%) scale(1.2) rotate(5deg); }
+}
+
+/* Zero symbol — the hero element */
+.zero-symbol {
+    display: inline-block;
+    font-size: 2em;
+    font-family: 'Space Grotesk', sans-serif;
+    background: radial-gradient(circle, #f0c040, #a78bfa, #22d3ee);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: zero-rotate 6s linear infinite;
+    text-shadow: none;
+}
+
+@keyframes zero-rotate {
+    0% { filter: hue-rotate(0deg); }
+    100% { filter: hue-rotate(360deg); }
+}
+
+/* Blockquotes — deep consciousness style */
+.post-detail .prose blockquote {
+    position: relative;
+    border-left: 3px solid #a78bfa;
+    background: linear-gradient(135deg, rgba(167, 139, 250, 0.05), rgba(99, 102, 241, 0.03));
+    padding: 2rem 2rem 2rem 2.5rem;
+    border-radius: 0 12px 12px 0;
+    font-size: 1.15rem;
+    color: #e8e6f0;
+    overflow: hidden;
+    animation: quote-glow 5s ease-in-out infinite;
+}
+
+.post-detail .prose blockquote::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    background: linear-gradient(180deg, #f0c040, #a78bfa, #22d3ee, #f472b6);
+    background-size: 100% 300%;
+    animation: border-flow 4s ease infinite;
+}
+
+@keyframes quote-glow {
+    0%, 100% { box-shadow: 0 0 20px rgba(167, 139, 250, 0.05); }
+    50% { box-shadow: 0 0 40px rgba(167, 139, 250, 0.12), 0 0 80px rgba(99, 102, 241, 0.05); }
+}
+
+@keyframes border-flow {
+    0%, 100% { background-position: 0% 0%; }
+    50% { background-position: 0% 100%; }
+}
+
+/* H2 headings — entrance animation */
+.post-detail .prose h2 {
+    position: relative;
+    padding-left: 1.5rem;
+    color: #ffffff;
+}
+
+.post-detail .prose h2::before {
+    content: '\2022';
+    position: absolute;
+    left: 0;
+    color: #f0c040;
+    font-size: 1.5em;
+    animation: dot-pulse 2s ease-in-out infinite;
+}
+
+@keyframes dot-pulse {
+    0%, 100% { opacity: 0.4; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.3); }
+}
+
+/* Paragraphs — subtle fade-in on scroll (enhanced by JS) */
+.post-detail .prose p {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: prose-reveal 0.8s ease forwards;
+}
+
+.post-detail .prose p:nth-child(1) { animation-delay: 0.1s; }
+.post-detail .prose p:nth-child(2) { animation-delay: 0.2s; }
+.post-detail .prose p:nth-child(3) { animation-delay: 0.3s; }
+.post-detail .prose p:nth-child(4) { animation-delay: 0.4s; }
+.post-detail .prose p:nth-child(5) { animation-delay: 0.5s; }
+.post-detail .prose h2 { animation: prose-reveal 0.8s ease forwards; animation-delay: 0.2s; opacity: 0; transform: translateY(20px); }
+.post-detail .prose blockquote { animation: prose-reveal 0.8s ease forwards; animation-delay: 0.3s; opacity: 0; transform: translateY(20px); }
+
+/* Scroll-triggered reveal class added by JS */
+.prose-visible {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+@keyframes prose-reveal {
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- Vedanta Sidebar Enhancement ---------- */
+.post-detail .vedanta-sidebar {
+    animation: sidebar-float 6s ease-in-out infinite;
+}
+
+@keyframes sidebar-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+.post-detail .vedanta-ornament {
+    animation: om-breathe 4s ease-in-out infinite;
+}
+
+@keyframes om-breathe {
+    0%, 100% { opacity: 0.4; transform: scale(1); text-shadow: 0 0 10px rgba(255, 153, 51, 0.3); }
+    50% { opacity: 0.9; transform: scale(1.15); text-shadow: 0 0 30px rgba(255, 153, 51, 0.6), 0 0 60px rgba(255, 153, 51, 0.2); }
+}
+
+/* ---------- Category Tag Glow ---------- */
+.post-detail .post-category-tag {
+    position: relative;
+    padding: 0.3rem 1rem;
+    border: 1px solid rgba(34, 211, 238, 0.3);
+    border-radius: 20px;
+    animation: tag-shimmer 3s ease infinite;
+}
+
+@keyframes tag-shimmer {
+    0%, 100% { box-shadow: 0 0 5px rgba(34, 211, 238, 0.1); }
+    50% { box-shadow: 0 0 15px rgba(34, 211, 238, 0.25), 0 0 30px rgba(34, 211, 238, 0.08); }
+}
+
+/* ---------- Author Area ---------- */
+.post-detail .author-avatar,
+.post-detail .author-avatar-placeholder {
+    box-shadow: 0 0 15px rgba(167, 139, 250, 0.3);
+    animation: avatar-glow 4s ease-in-out infinite;
+}
+
+@keyframes avatar-glow {
+    0%, 100% { box-shadow: 0 0 10px rgba(167, 139, 250, 0.2); }
+    50% { box-shadow: 0 0 25px rgba(167, 139, 250, 0.5), 0 0 50px rgba(99, 102, 241, 0.15); }
+}
+
+/* ---------- Scroll Progress Indicator ---------- */
+.scroll-progress {
+    position: fixed;
+    top: 70px;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #f0c040, #a78bfa, #22d3ee, #f472b6);
+    background-size: 300% 100%;
+    animation: progress-color 4s ease infinite;
+    z-index: 1001;
+    transition: width 0.1s linear;
+    border-radius: 0 2px 2px 0;
+}
+
+@keyframes progress-color {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+/* ---------- Reading Focus Vignette ---------- */
+.reading-vignette {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    background: radial-gradient(
+        ellipse 80% 70% at 50% 50%,
+        transparent 0%,
+        rgba(5, 5, 16, 0.3) 60%,
+        rgba(5, 5, 16, 0.7) 100%
+    );
+    opacity: 0;
+    transition: opacity 1s ease;
+}
+
+.reading-vignette.active {
+    opacity: 1;
+}
+
+/* ---------- Responsive Tweaks ---------- */
+@media (max-width: 768px) {
+    .post-intro {
+        font-size: 1.15rem !important;
+    }
+
+    .post-closing {
+        font-size: 1.05rem !important;
+        padding: 2rem 1.25rem !important;
+    }
+
+    .post-detail .prose blockquote {
+        padding: 1.5rem 1.25rem 1.5rem 1.75rem;
+    }
+}

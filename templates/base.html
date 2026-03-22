@@ -1,0 +1,147 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SEO Meta Tags -->
+    <title>{% block title %}{{ site_name }} - Explore the Cosmos & Consciousness{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}{{ site_description }}{% endblock %}">
+    <meta name="keywords" content="{% block meta_keywords %}universe, cosmos, vedanta, simulation theory, philosophy, consciousness, astronomy{% endblock %}">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+    <meta property="og:title" content="{% block og_title %}{{ site_name }}{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}{{ site_description }}{% endblock %}">
+    <meta property="og:url" content="{{ site_url }}{% block og_url %}{% endblock %}">
+    <meta property="og:image" content="{% block og_image %}{{ site_url }}{% static 'images/og-default.jpg' %}{% endblock %}">
+    <meta property="og:site_name" content="{{ site_name }}">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{% block tw_title %}{{ site_name }}{% endblock %}">
+    <meta name="twitter:description" content="{% block tw_description %}{{ site_description }}{% endblock %}">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="{{ site_url }}{% block canonical %}{{ request.path }}{% endblock %}">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="{% static 'css/cosmic.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Cosmic Background Canvas -->
+    <canvas id="cosmic-bg"></canvas>
+
+    <!-- Navigation -->
+    <nav class="cosmic-nav">
+        <div class="nav-container">
+            <a href="{% url 'blog:home' %}" class="nav-logo">
+                <span class="logo-icon">&#10022;</span>
+                <span class="logo-text">Cosmic<span class="logo-accent">Vedanta</span></span>
+            </a>
+
+            <button class="nav-toggle" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+
+            <ul class="nav-links">
+                <li><a href="{% url 'blog:home' %}" class="{% if request.path == '/' %}active{% endif %}">Universe Feed</a></li>
+                <li class="nav-dropdown">
+                    <a href="#" class="dropdown-trigger">Explore</a>
+                    <ul class="dropdown-menu">
+                        {% for cat in categories %}
+                        <li><a href="{% url 'blog:category' slug=cat.slug %}">{{ cat.name }}</a></li>
+                        {% empty %}
+                        <li><a href="#">Cosmos</a></li>
+                        <li><a href="#">Vedanta</a></li>
+                        <li><a href="#">Simulation Theory</a></li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                {% if user.is_authenticated %}
+                <li><a href="{% url 'accounts:logout' %}">Logout</a></li>
+                {% else %}
+                <li><a href="{% url 'accounts:login' %}">Login</a></li>
+                <li><a href="{% url 'accounts:signup' %}" class="nav-cta">Join the Journey</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Messages -->
+    {% if messages %}
+    <div class="cosmic-messages">
+        {% for message in messages %}
+        <div class="cosmic-alert cosmic-alert-{{ message.tags }}">
+            {{ message }}
+            <button class="alert-close" onclick="this.parentElement.remove()">&times;</button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Main Content -->
+    <main class="cosmic-main">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="cosmic-footer">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3 class="footer-title">
+                        <span class="logo-icon">&#10022;</span> CosmicVedanta
+                    </h3>
+                    <p class="footer-desc">
+                        Exploring the infinite tapestry of the cosmos through the lens of
+                        ancient Vedantic wisdom and modern simulation theory.
+                    </p>
+                </div>
+                <div class="footer-col">
+                    <h4>Explore</h4>
+                    <ul>
+                        <li><a href="{% url 'blog:home' %}">Daily Feed</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Community</h4>
+                    <ul>
+                        {% if not user.is_authenticated %}
+                        <li><a href="{% url 'accounts:signup' %}">Join Us</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Newsletter</h4>
+                    <p class="footer-desc">Get cosmic wisdom delivered daily.</p>
+                    <form method="post" action="{% url 'newsletter:subscribe' %}" class="footer-newsletter">
+                        {% csrf_token %}
+                        <input type="email" name="email" placeholder="your@email.com" class="cosmic-input" required>
+                        <button type="submit" class="cosmic-btn cosmic-btn-sm">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 CosmicVedanta. All consciousness reserved.</p>
+                <p class="footer-creator">Created by Tishant</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Ad placement: bottom sticky -->
+    <div class="ad-slot ad-slot-bottom" id="ad-bottom">
+        <span class="ad-label">Ad Space</span>
+    </div>
+
+    <script src="{% static 'js/cosmic.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
