@@ -276,6 +276,287 @@
     opacity: 1;
 }
 
+/* ============================================================
+   Mandukya Upanishad — Sacred Consciousness Styling
+   OM hypnotic spiral galaxy background
+   ============================================================ */
+
+/* --- Mandukya Post Container --- */
+.mandukya-post {
+    position: relative;
+}
+
+/* --- Sanskrit Text Blocks --- */
+.sanskrit-block {
+    position: relative;
+    background: linear-gradient(135deg, rgba(255, 153, 51, 0.06), rgba(194, 24, 91, 0.04), rgba(167, 139, 250, 0.06));
+    border: 1px solid rgba(255, 153, 51, 0.15);
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    margin: 1.5rem 0;
+    text-align: center;
+    overflow: hidden;
+    animation: sanskrit-shimmer 6s ease-in-out infinite;
+}
+
+.sanskrit-block::before {
+    content: '\1F549';
+    position: absolute;
+    top: -8px;
+    right: 15px;
+    font-size: 1.8rem;
+    opacity: 0.15;
+    animation: om-float 5s ease-in-out infinite;
+}
+
+.sanskrit-block::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 153, 51, 0.05), transparent);
+    animation: sanskrit-sweep 8s ease-in-out infinite;
+}
+
+.sanskrit-text {
+    font-size: 1.2rem;
+    line-height: 2;
+    color: #ff9933 !important;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    text-shadow: 0 0 20px rgba(255, 153, 51, 0.15);
+    -webkit-text-fill-color: #ff9933 !important;
+}
+
+@keyframes sanskrit-shimmer {
+    0%, 100% { box-shadow: 0 0 15px rgba(255, 153, 51, 0.05), inset 0 0 30px rgba(255, 153, 51, 0.02); }
+    50% { box-shadow: 0 0 30px rgba(255, 153, 51, 0.1), inset 0 0 50px rgba(255, 153, 51, 0.04); }
+}
+
+@keyframes sanskrit-sweep {
+    0%, 100% { left: -100%; }
+    50% { left: 100%; }
+}
+
+@keyframes om-float {
+    0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.1; }
+    50% { transform: translateY(-5px) rotate(10deg); opacity: 0.25; }
+}
+
+/* --- Vedanta Highlight Box --- */
+.vedanta-highlight {
+    position: relative;
+    background: linear-gradient(135deg, rgba(255, 153, 51, 0.08), rgba(232, 176, 74, 0.05));
+    border-left: 4px solid;
+    border-image: linear-gradient(180deg, #ff9933, #e8b04a, #a78bfa) 1;
+    padding: 2rem 2.5rem;
+    margin: 2rem 0;
+    border-radius: 0 16px 16px 0;
+    animation: highlight-breathe 5s ease-in-out infinite;
+}
+
+.vedanta-highlight p {
+    color: #e8e6f0 !important;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+@keyframes highlight-breathe {
+    0%, 100% { box-shadow: 0 0 20px rgba(255, 153, 51, 0.05); }
+    50% { box-shadow: 0 0 40px rgba(255, 153, 51, 0.12), 0 0 80px rgba(255, 153, 51, 0.04); }
+}
+
+/* --- Consciousness State Cards --- */
+.consciousness-state {
+    position: relative;
+    background: rgba(15, 15, 46, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 16px;
+    padding: 2.5rem;
+    margin: 2.5rem 0;
+    overflow: hidden;
+    transition: all 0.4s ease;
+}
+
+.consciousness-state:hover {
+    transform: translateY(-3px);
+    border-color: rgba(255, 255, 255, 0.12);
+}
+
+.consciousness-state h3 {
+    font-size: 1.4rem;
+    margin-bottom: 1.5rem;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+}
+
+/* State-specific glow */
+.state-waking {
+    border-left: 3px solid #22d3ee;
+    box-shadow: inset -100px 0 150px -100px rgba(34, 211, 238, 0.03);
+}
+.state-waking:hover { box-shadow: 0 0 30px rgba(34, 211, 238, 0.08), inset -100px 0 150px -100px rgba(34, 211, 238, 0.05); }
+.state-waking h3 { text-shadow: 0 0 20px rgba(34, 211, 238, 0.3); }
+
+.state-dream {
+    border-left: 3px solid #a78bfa;
+    box-shadow: inset -100px 0 150px -100px rgba(167, 139, 250, 0.03);
+}
+.state-dream:hover { box-shadow: 0 0 30px rgba(167, 139, 250, 0.08), inset -100px 0 150px -100px rgba(167, 139, 250, 0.05); }
+.state-dream h3 { text-shadow: 0 0 20px rgba(167, 139, 250, 0.3); }
+
+.state-sleep {
+    border-left: 3px solid #6366f1;
+    box-shadow: inset -100px 0 150px -100px rgba(99, 102, 241, 0.03);
+}
+.state-sleep:hover { box-shadow: 0 0 30px rgba(99, 102, 241, 0.08), inset -100px 0 150px -100px rgba(99, 102, 241, 0.05); }
+.state-sleep h3 { text-shadow: 0 0 20px rgba(99, 102, 241, 0.3); }
+
+.state-turiya {
+    border-left: 3px solid #f0c040;
+    background: linear-gradient(135deg, rgba(15, 15, 46, 0.6), rgba(240, 192, 64, 0.03));
+    box-shadow: inset -100px 0 150px -100px rgba(240, 192, 64, 0.03);
+}
+.state-turiya:hover { box-shadow: 0 0 40px rgba(240, 192, 64, 0.1), inset -100px 0 150px -100px rgba(240, 192, 64, 0.06); }
+.state-turiya h3 { text-shadow: 0 0 25px rgba(240, 192, 64, 0.4); }
+
+/* --- OM Breakdown Section --- */
+.om-breakdown {
+    display: grid;
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.om-part {
+    position: relative;
+    background: rgba(15, 15, 46, 0.5);
+    border: 1px solid rgba(167, 139, 250, 0.1);
+    border-radius: 12px;
+    padding: 2rem;
+    transition: all 0.3s ease;
+}
+
+.om-part:hover {
+    border-color: rgba(167, 139, 250, 0.25);
+    transform: translateX(5px);
+}
+
+.om-part h4 {
+    color: #f0c040 !important;
+    -webkit-text-fill-color: #f0c040 !important;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+.om-silence {
+    border-color: rgba(240, 192, 64, 0.2);
+    background: linear-gradient(135deg, rgba(240, 192, 64, 0.03), rgba(167, 139, 250, 0.03));
+    animation: silence-pulse 4s ease-in-out infinite;
+}
+
+@keyframes silence-pulse {
+    0%, 100% { box-shadow: 0 0 10px rgba(240, 192, 64, 0.03); }
+    50% { box-shadow: 0 0 30px rgba(240, 192, 64, 0.08), 0 0 60px rgba(240, 192, 64, 0.03); }
+}
+
+/* --- Modern Problems Section --- */
+.modern-problem {
+    position: relative;
+    background: rgba(15, 15, 46, 0.5);
+    border: 1px solid rgba(244, 114, 182, 0.1);
+    border-radius: 12px;
+    padding: 2rem 2.5rem;
+    margin: 2rem 0;
+}
+
+.modern-problem h3 {
+    color: #f472b6 !important;
+    -webkit-text-fill-color: #f472b6 !important;
+    font-size: 1.2rem;
+}
+
+.modern-problem:hover {
+    border-color: rgba(244, 114, 182, 0.25);
+}
+
+/* --- Meditation Steps --- */
+.meditation-steps {
+    display: grid;
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.med-step {
+    position: relative;
+    background: linear-gradient(135deg, rgba(167, 139, 250, 0.04), rgba(99, 102, 241, 0.03));
+    border: 1px solid rgba(167, 139, 250, 0.1);
+    border-radius: 12px;
+    padding: 2rem;
+    transition: all 0.3s ease;
+}
+
+.med-step:hover {
+    border-color: rgba(167, 139, 250, 0.2);
+    transform: translateY(-2px);
+}
+
+.med-step h4 {
+    color: #22d3ee !important;
+    -webkit-text-fill-color: #22d3ee !important;
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+}
+
+/* --- Final Essence --- */
+.final-essence {
+    position: relative;
+    text-align: center;
+    padding: 3rem 2rem;
+    margin-top: 3rem;
+    background: radial-gradient(ellipse at center, rgba(240, 192, 64, 0.06), rgba(167, 139, 250, 0.03), transparent);
+    border: 1px solid rgba(240, 192, 64, 0.15);
+    border-radius: 20px;
+    animation: essence-glow 5s ease-in-out infinite;
+}
+
+.final-essence::before {
+    content: '\1F549';
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 3rem;
+    opacity: 0.4;
+    animation: om-breathe 4s ease-in-out infinite;
+}
+
+.closing-truth {
+    font-size: 1.3rem !important;
+    color: #e8e6f0 !important;
+    line-height: 1.8;
+    margin-top: 1.5rem !important;
+}
+
+.closing-truth strong {
+    color: #f0c040 !important;
+    -webkit-text-fill-color: #f0c040 !important;
+}
+
+@keyframes essence-glow {
+    0%, 100% { box-shadow: 0 0 30px rgba(240, 192, 64, 0.05); }
+    50% { box-shadow: 0 0 60px rgba(240, 192, 64, 0.1), 0 0 100px rgba(167, 139, 250, 0.05); }
+}
+
+/* --- OM Symbol in text --- */
+.om-symbol {
+    display: inline-block;
+    font-size: 1.8em;
+    color: #ff9933;
+    animation: om-breathe 4s ease-in-out infinite;
+}
+
 /* ---------- Responsive Tweaks ---------- */
 @media (max-width: 768px) {
     .post-intro {
