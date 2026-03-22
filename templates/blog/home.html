@@ -57,7 +57,7 @@
                         <h3 class="card-title">{{ post.title }}</h3>
                         <p class="card-excerpt">{{ post.excerpt|truncatewords:25 }}</p>
                         <div class="card-meta">
-                            <span>{{ post.published_at|naturalday }}</span>
+                            <span>{% if post.published_at %}{{ post.published_at|naturalday }}{% else %}Just now{% endif %}</span>
                             <span>{{ post.view_count|intcomma }} views</span>
                         </div>
                     </div>
@@ -113,7 +113,7 @@
                         <p class="card-excerpt">{{ post.excerpt|truncatewords:20 }}</p>
                         <div class="card-meta">
                             <span>by {{ post.author.get_short_name }}</span>
-                            <span>{{ post.published_at|naturalday }}</span>
+                            <span>{% if post.published_at %}{{ post.published_at|naturalday }}{% else %}Just now{% endif %}</span>
                         </div>
                         {% if post.is_premium %}
                         <span class="premium-badge">Premium</span>
