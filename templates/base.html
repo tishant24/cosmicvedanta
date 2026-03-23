@@ -63,6 +63,9 @@
                     <a href="#" class="dropdown-trigger">{{ user.get_short_name }}</a>
                     <ul class="dropdown-menu">
                         <li><a href="{% url 'blog:my_posts' %}">My Posts</a></li>
+                        {% if user.is_staff %}
+                        <li><a href="{% url 'blog:admin_dashboard' %}">Dashboard</a></li>
+                        {% endif %}
                         <li><a href="{% url 'accounts:logout' %}">Logout</a></li>
                     </ul>
                 </li>

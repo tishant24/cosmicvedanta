@@ -12,6 +12,9 @@ urlpatterns = [
     path('comment/<int:comment_id>/delete/', views.delete_comment_view, name='delete_comment'),
     path('submit/', views.submit_post_view, name='submit_post'),
     path('my-posts/', views.my_posts_view, name='my_posts'),
+    path('admin-dashboard/', views.admin_dashboard_view, name='admin_dashboard'),
+    path('approve/<int:post_id>/', views.approve_post_view, name='approve_post'),
+    path('reject/<int:post_id>/', views.reject_post_view, name='reject_post'),
     path('category/<slug:slug>/', views.category_view, name='category'),
     path('go/<slug:short_code>/', views.affiliate_redirect_view, name='affiliate_redirect'),
 ]

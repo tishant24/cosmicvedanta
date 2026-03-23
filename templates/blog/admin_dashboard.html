@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Admin Dashboard | CosmicVedanta{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="section-container" style="max-width: 900px; margin: 0 auto;">
+        <h1 class="section-title" style="margin-bottom: 2rem;">
+            <span class="title-ornament">&#9733;</span> Admin Dashboard
+        </h1>
+
+        <!-- Quick Actions -->
+        <div style="display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap;">
+            <a href="{% url 'blog:submit_post' %}" class="cosmic-btn">+ New Post</a>
+            <a href="/admin/" class="cosmic-btn" style="background: transparent; border: 1px solid #6b7280;">Django Admin</a>
+        </div>
+
+        <!-- Pending Posts -->
+        <h2 style="color: #f59e0b; margin-bottom: 1rem; font-size: 1.3rem;">Pending Approval ({{ pending|length }})</h2>
+
+        {% if pending %}
+        {% for post in pending %}
+        <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(245,158,11,0.3); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem;">
+            <div style="display: flex; justify-content: space-between; align-items: start; flex-wrap: wrap; gap: 1rem;">
+                <div style="flex: 1;">
+                    <h3 style="color: #e2e8f0; margin-bottom: 0.5rem;">{{ post.title }}</h3>
+                    <p style="color: #9ca3af; font-size: 0.85rem;">
+                        By <strong>{{ post.author.get_short_name }}</strong>
+                        {% if post.category %} in <strong>{{ post.category.name }}</strong>{% endif %}
+                        &middot; {{ post.created_at|timesince }} ago
+                    </p>
+                    <p style="color: #cbd5e1; margin-top: 0.5rem; font-size: 0.9rem;">{{ post.body|truncatewords:50 }}</p>
+                    {% if post.image %}
+                    <p style="color: #818cf8; font-size: 0.8rem; margin-top: 0.3rem;">📎 Has image attached</p>
+                    {% endif %}
+                </div>
+                <div style="display: flex; gap: 0.5rem; flex-shrink: 0;">
+                    <form method="post" action="{% url 'blog:approve_post' post_id=post.pk %}">
+                        {% csrf_token %}
+                        <button type="submit" class="cosmic-btn cosmic-btn-sm" style="background: #10b981;">✓ Approve</button>
+                    </form>
+                    <a href="{% url 'blog:reject_post' post_id=post.pk %}" class="cosmic-btn cosmic-btn-sm" style="background: #ef4444; display: inline-block; text-decoration: none; padding: 0.4rem 1rem; border-radius: 8px; font-size: 0.85rem;">✕ Reject</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div style="background: rgba(255,255,255,0.03); border-radius: 12px; padding: 2rem; text-align: center; color: #6b7280; margin-bottom: 2rem;">
+            No pending posts. All caught up! ✨
+        </div>
+        {% endif %}
+
+        <!-- Recently Approved -->
+        <h2 style="color: #10b981; margin: 2rem 0 1rem; font-size: 1.3rem;">Recently Approved ({{ approved|length }})</h2>
+        {% for post in approved %}
+        <div style="background: rgba(16,185,129,0.05); border: 1px solid rgba(16,185,129,0.2); border-radius: 12px; padding: 1rem 1.5rem; margin-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <span style="color: #e2e8f0;">{{ post.title }}</span>
+                <span style="color: #6b7280; font-size: 0.8rem; margin-left: 0.5rem;">by {{ post.author.get_short_name }}</span>
+            </div>
+            <span style="color: #10b981; font-size: 0.8rem;">✓ Approved</span>
+        </div>
+        {% empty %}
+        <p style="color: #6b7280;">None yet.</p>
+        {% endfor %}
+
+        <!-- Recently Rejected -->
+        <h2 style="color: #ef4444; margin: 2rem 0 1rem; font-size: 1.3rem;">Recently Rejected ({{ rejected|length }})</h2>
+        {% for post in rejected %}
+        <div style="background: rgba(239,68,68,0.05); border: 1px solid rgba(239,68,68,0.2); border-radius: 12px; padding: 1rem 1.5rem; margin-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <span style="color: #e2e8f0;">{{ post.title }}</span>
+                <span style="color: #6b7280; font-size: 0.8rem; margin-left: 0.5rem;">by {{ post.author.get_short_name }}</span>
+            </div>
+            <span style="color: #ef4444; font-size: 0.8rem;">✕ Rejected</span>
+        </div>
+        {% empty %}
+        <p style="color: #6b7280;">None.</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

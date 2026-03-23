@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Publish New Post | CosmicVedanta{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="section-container" style="max-width: 800px; margin: 0 auto;">
+        <h1 class="section-title" style="margin-bottom: 2rem;">
+            <span class="title-ornament">&#10038;</span> Publish New Post
+        </h1>
+
+        <p style="color: #9ca3af; margin-bottom: 2rem;">As admin, your post will go live instantly. Just write in plain text — it auto-formats beautifully!</p>
+
+        <form method="post" enctype="multipart/form-data" class="submit-form">
+            {% csrf_token %}
+
+            {% for field in form %}
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; color: #c4b5fd; margin-bottom: 0.5rem; font-weight: 600;">
+                    {{ field.label }}
+                    {% if field.field.required %}<span style="color: #f59e0b;">*</span>{% endif %}
+                </label>
+                {{ field }}
+                {% if field.help_text %}
+                <small style="color: #6b7280; display: block; margin-top: 0.3rem;">{{ field.help_text }}</small>
+                {% endif %}
+                {% for error in field.errors %}
+                <small style="color: #ef4444;">{{ error }}</small>
+                {% endfor %}
+            </div>
+            {% endfor %}
+
+            <div style="margin-top: 1rem;">
+                <label style="color: #c4b5fd;">
+                    <input type="checkbox" name="is_featured" style="margin-right: 0.5rem;">
+                    Feature on homepage hero
+                </label>
+            </div>
+
+            <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+                <button type="submit" class="cosmic-btn">Publish Now</button>
+                <a href="{% url 'blog:home' %}" class="cosmic-btn" style="background: transparent; border: 1px solid #6b7280;">Cancel</a>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}

@@ -1,6 +1,6 @@
 """Blog forms for comments and user submissions."""
 from django import forms
-from .models import Comment, UserPost
+from .models import Comment, UserPost, Post
 
 
 class CommentForm(forms.ModelForm):
@@ -26,6 +26,45 @@ class CommentEditForm(forms.ModelForm):
             'body': forms.Textarea(attrs={
                 'class': 'cosmic-input',
                 'rows': 3,
+            }),
+        }
+
+
+class AdminPostForm(forms.ModelForm):
+    """Full post form for admin — publishes directly."""
+    class Meta:
+        model = Post
+        fields = ['title', 'category', 'body', 'featured_image', 'excerpt',
+                  'vedanta_quote', 'vedanta_source', 'is_featured']
+        widgets = {
+            'title': forms.TextInput(attrs={
+                'class': 'cosmic-input',
+                'placeholder': 'Post title...',
+            }),
+            'category': forms.Select(attrs={
+                'class': 'cosmic-input',
+            }),
+            'body': forms.Textarea(attrs={
+                'class': 'cosmic-input',
+                'placeholder': 'Write in plain text — auto-formats to beautiful HTML...',
+                'rows': 15,
+            }),
+            'excerpt': forms.Textarea(attrs={
+                'class': 'cosmic-input',
+                'placeholder': 'Short summary (auto-generated if blank)...',
+                'rows': 3,
+            }),
+            'vedanta_quote': forms.Textarea(attrs={
+                'class': 'cosmic-input',
+                'placeholder': 'Optional philosophical quote...',
+                'rows': 3,
+            }),
+            'vedanta_source': forms.TextInput(attrs={
+                'class': 'cosmic-input',
+                'placeholder': 'Quote source (e.g., Upanishads)...',
+            }),
+            'featured_image': forms.ClearableFileInput(attrs={
+                'class': 'cosmic-input',
             }),
         }
 

@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Reject Post | CosmicVedanta{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="section-container" style="max-width: 600px; margin: 0 auto;">
+        <h1 class="section-title" style="margin-bottom: 2rem;">Reject Post</h1>
+
+        <div style="background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem;">
+            <h3 style="color: #e2e8f0;">{{ user_post.title }}</h3>
+            <p style="color: #9ca3af; font-size: 0.9rem;">By {{ user_post.author.get_short_name }}</p>
+            <p style="color: #cbd5e1; margin-top: 1rem;">{{ user_post.body|truncatewords:80 }}</p>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+            <label style="display: block; color: #c4b5fd; margin-bottom: 0.5rem; font-weight: 600;">Reason for rejection (shown to user):</label>
+            <textarea name="reason" class="cosmic-input" rows="4" placeholder="Explain why this post was rejected..."></textarea>
+            <div style="margin-top: 1.5rem; display: flex; gap: 1rem;">
+                <button type="submit" class="cosmic-btn" style="background: #ef4444;">Reject Post</button>
+                <a href="{% url 'blog:admin_dashboard' %}" class="cosmic-btn" style="background: transparent; border: 1px solid #6b7280;">Cancel</a>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}

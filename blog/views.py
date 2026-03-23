@@ -5,9 +5,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import F
 from django.http import HttpResponseForbidden
+from django.utils.text import slugify
 
 from .models import Post, Category, Comment, AffiliateLink, UserPost
-from .forms import CommentForm, CommentEditForm, UserPostForm
+from .forms import CommentForm, CommentEditForm, UserPostForm, AdminPostForm
 
 
 def home_view(request):
@@ -124,21 +125,40 @@ def delete_comment_view(request, comment_id):
 
 @login_required
 def submit_post_view(request):
-    """Allow any user to submit a post for admin approval."""
-    if request.method == 'POST':
-        form = UserPostForm(request.POST, request.FILES)
-        if form.is_valid():
-            user_post = form.save(commit=False)
-            user_post.author = request.user
-            user_post.save()
-            messages.success(request, 'Your post has been submitted for review! You will be notified once approved.')
-            return redirect('blog:my_posts')
-    else:
-        form = UserPostForm()
+    """Allow any user to submit a post. Admin posts auto-publish."""
+    is_admin = request.user.is_staff or request.user.is_superuser
 
-    return render(request, 'blog/submit_post.html', {
-        'form': form,
-    })
+    if is_admin:
+        # Admin gets the full post form — publishes directly
+        if request.method == 'POST':
+            form = AdminPostForm(request.POST, request.FILES)
+            if form.is_valid():
+                post = form.save(commit=False)
+                post.author = request.user
+                if not post.slug:
+                    post.slug = slugify(post.title)
+                post.status = 'published'
+                if not post.excerpt:
+                    post.excerpt = post.body[:200]
+                post.save()
+                messages.success(request, 'Post published successfully!')
+                return redirect('blog:post_detail', slug=post.slug)
+        else:
+            form = AdminPostForm()
+        return render(request, 'blog/admin_post.html', {'form': form})
+    else:
+        # Regular users submit for approval
+        if request.method == 'POST':
+            form = UserPostForm(request.POST, request.FILES)
+            if form.is_valid():
+                user_post = form.save(commit=False)
+                user_post.author = request.user
+                user_post.save()
+                messages.success(request, 'Your post has been submitted for review!')
+                return redirect('blog:my_posts')
+        else:
+            form = UserPostForm()
+        return render(request, 'blog/submit_post.html', {'form': form})
 
 
 @login_required
@@ -148,6 +168,75 @@ def my_posts_view(request):
     return render(request, 'blog/my_posts.html', {
         'user_posts': user_posts,
     })
+
+
+@login_required
+def admin_dashboard_view(request):
+    """Admin dashboard to approve/reject user posts from frontend."""
+    if not (request.user.is_staff or request.user.is_superuser):
+        return HttpResponseForbidden("Admin access only.")
+
+    pending = UserPost.objects.filter(status='pending')
+    approved = UserPost.objects.filter(status='approved')[:10]
+    rejected = UserPost.objects.filter(status='rejected')[:10]
+
+    return render(request, 'blog/admin_dashboard.html', {
+        'pending': pending,
+        'approved': approved,
+        'rejected': rejected,
+    })
+
+
+@login_required
+def approve_post_view(request, post_id):
+    """Approve a user post from frontend — creates a published Post."""
+    if not (request.user.is_staff or request.user.is_superuser):
+        return HttpResponseForbidden("Admin access only.")
+
+    user_post = get_object_or_404(UserPost, pk=post_id)
+
+    if request.method == 'POST':
+        user_post.status = 'approved'
+        user_post.save()
+
+        # Create actual published Post
+        slug = slugify(user_post.title)
+        if not Post.objects.filter(slug=slug).exists():
+            post = Post(
+                title=user_post.title,
+                slug=slug,
+                author=user_post.author,
+                category=user_post.category,
+                body=user_post.body,
+                excerpt=user_post.body[:200],
+                status='published',
+            )
+            if user_post.image:
+                post.featured_image = user_post.image
+            post.save()
+
+        messages.success(request, f'"{user_post.title}" approved and published!')
+        return redirect('blog:admin_dashboard')
+
+    return render(request, 'blog/approve_post.html', {'user_post': user_post})
+
+
+@login_required
+def reject_post_view(request, post_id):
+    """Reject a user post with reason."""
+    if not (request.user.is_staff or request.user.is_superuser):
+        return HttpResponseForbidden("Admin access only.")
+
+    user_post = get_object_or_404(UserPost, pk=post_id)
+
+    if request.method == 'POST':
+        user_post.status = 'rejected'
+        user_post.admin_note = request.POST.get('reason', '')
+        user_post.save()
+        messages.success(request, f'"{user_post.title}" rejected.')
+        return redirect('blog:admin_dashboard')
+
+    return render(request, 'blog/reject_post.html', {'user_post': user_post})
 
 
 def category_view(request, slug):
