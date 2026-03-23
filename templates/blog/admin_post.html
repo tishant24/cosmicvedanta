@@ -4,43 +4,93 @@
 {% block title %}Publish New Post | CosmicVedanta{% endblock %}
 
 {% block extra_css %}
+<!-- Quill.js Editor -->
+<link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet">
 <style>
     .post-form-container { max-width: 900px; margin: 0 auto; }
     .form-group { margin-bottom: 1.5rem; }
     .form-label {
-        display: block;
-        color: #c4b5fd;
-        margin-bottom: 0.5rem;
-        font-weight: 600;
-        font-size: 0.95rem;
+        display: block; color: #c4b5fd; margin-bottom: 0.5rem;
+        font-weight: 600; font-size: 0.95rem;
     }
     .form-label .required { color: #f59e0b; }
-    .form-hint {
-        color: #6b7280;
-        font-size: 0.8rem;
-        margin-top: 0.3rem;
-    }
-    .form-row {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 1.5rem;
-    }
-    @media (max-width: 600px) {
-        .form-row { grid-template-columns: 1fr; }
-    }
+    .form-hint { color: #6b7280; font-size: 0.8rem; margin-top: 0.3rem; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
     .checkbox-label {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
+        display: flex; align-items: center; gap: 0.5rem;
+        color: #c4b5fd; cursor: pointer;
+    }
+    .form-actions { display: flex; gap: 1rem; margin-top: 2rem; }
+
+    /* Quill cosmic dark theme */
+    .ql-toolbar.ql-snow {
+        background: rgba(139,92,246,0.1) !important;
+        border: 1px solid rgba(139,92,246,0.3) !important;
+        border-radius: 10px 10px 0 0 !important;
+    }
+    .ql-toolbar .ql-stroke { stroke: #a78bfa !important; }
+    .ql-toolbar .ql-fill { fill: #a78bfa !important; }
+    .ql-toolbar .ql-picker-label { color: #a78bfa !important; }
+    .ql-toolbar button:hover .ql-stroke { stroke: #f0c040 !important; }
+    .ql-toolbar button:hover .ql-fill { fill: #f0c040 !important; }
+    .ql-toolbar button.ql-active .ql-stroke { stroke: #f0c040 !important; }
+    .ql-toolbar button.ql-active .ql-fill { fill: #f0c040 !important; }
+    .ql-toolbar .ql-picker-options { background: #1a1a3e !important; border-color: rgba(139,92,246,0.3) !important; }
+    .ql-toolbar .ql-picker-item { color: #c4b5fd !important; }
+    .ql-toolbar .ql-picker-item:hover { color: #f0c040 !important; }
+
+    .ql-container.ql-snow {
+        border: 1px solid rgba(139,92,246,0.3) !important;
+        border-top: none !important;
+        border-radius: 0 0 10px 10px !important;
+        background: #0d1117;
+        min-height: 400px;
+        font-size: 1rem;
+    }
+    .ql-editor {
+        color: #e2e8f0;
+        font-family: 'Space Grotesk', sans-serif;
+        line-height: 1.8;
+        min-height: 400px;
+    }
+    .ql-editor.ql-blank::before { color: #6b7280 !important; font-style: normal !important; }
+    .ql-editor h2 { color: #f0c040; font-size: 1.5rem; margin: 1.5rem 0 0.75rem; }
+    .ql-editor h3 { color: #c4b5fd; font-size: 1.25rem; margin: 1.25rem 0 0.5rem; }
+    .ql-editor blockquote {
+        border-left: 3px solid #8b5cf6; padding-left: 1rem;
+        color: #a78bfa; margin: 1rem 0;
+    }
+    .ql-editor pre.ql-syntax {
+        background: #161b22 !important;
+        color: #e6edf3 !important;
+        border: 1px solid rgba(139,92,246,0.3);
+        border-radius: 8px;
+        padding: 1rem;
+        font-family: 'JetBrains Mono', 'Fira Code', monospace;
+        font-size: 0.85rem;
+        line-height: 1.7;
+        overflow-x: auto;
+    }
+    .ql-editor code {
+        background: rgba(139,92,246,0.15);
         color: #c4b5fd;
-        cursor: pointer;
+        padding: 0.1rem 0.3rem;
+        border-radius: 4px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.85em;
     }
-    .form-actions {
-        display: flex;
-        gap: 1rem;
-        margin-top: 2rem;
+    .ql-snow .ql-tooltip {
+        background: #1a1a3e !important;
+        border-color: rgba(139,92,246,0.3) !important;
+        color: #e2e8f0 !important;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.5) !important;
     }
-    .tox-tinymce { border-radius: 8px !important; border-color: rgba(139,92,246,0.3) !important; }
+    .ql-snow .ql-tooltip input[type="text"] {
+        background: #0d1117 !important;
+        color: #e2e8f0 !important;
+        border-color: rgba(139,92,246,0.3) !important;
+    }
 </style>
 {% endblock %}
 
@@ -50,18 +100,16 @@
         <h1 class="section-title" style="margin-bottom: 0.5rem;">
             <span class="title-ornament">&#10038;</span> Publish New Post
         </h1>
-        <p style="color: #9ca3af; margin-bottom: 2rem;">Write naturally — format with the editor toolbar. Your post goes live instantly.</p>
+        <p style="color: #9ca3af; margin-bottom: 2rem;">Write and format visually. Your post goes live instantly.</p>
 
-        <form method="post" enctype="multipart/form-data">
+        <form method="post" enctype="multipart/form-data" id="post-form">
             {% csrf_token %}
 
-            <!-- Title -->
             <div class="form-group">
                 <label class="form-label">Title <span class="required">*</span></label>
                 {{ form.title }}
             </div>
 
-            <!-- Category + Featured -->
             <div class="form-row">
                 <div class="form-group">
                     <label class="form-label">Category <span class="required">*</span></label>
@@ -74,27 +122,24 @@
                 </div>
             </div>
 
-            <!-- Body (Rich Editor) -->
             <div class="form-group">
                 <label class="form-label">Body <span class="required">*</span></label>
-                <textarea name="body" id="id_body" class="cosmic-input" rows="20">{{ form.body.value|default:'' }}</textarea>
-                <p class="form-hint">Use the toolbar for bold, headings, code blocks, images, lists etc.</p>
+                <div id="editor"></div>
+                <input type="hidden" name="body" id="id_body">
+                <p class="form-hint">Use toolbar: Bold, Headings, Code Block, Blockquote, Lists, Links, Images</p>
             </div>
 
-            <!-- Excerpt -->
             <div class="form-group">
                 <label class="form-label">Excerpt</label>
                 {{ form.excerpt }}
-                <p class="form-hint">Short summary for cards & SEO. Auto-generated if blank.</p>
+                <p class="form-hint">Short summary. Auto-generated if blank.</p>
             </div>
 
-            <!-- Featured Image -->
             <div class="form-group">
                 <label class="form-label">Featured Image</label>
                 {{ form.featured_image }}
             </div>
 
-            <!-- Vedanta Quote -->
             <div class="form-row">
                 <div class="form-group">
                     <label class="form-label">Vedanta Quote</label>
@@ -120,50 +165,38 @@
 {% endblock %}
 
 {% block extra_js %}
-<!-- TinyMCE CDN -->
-<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+<!-- Syntax highlighting in editor -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/sql.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/scala.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/yaml.min.js"></script>
 <script>
-tinymce.init({
-    selector: '#id_body',
-    height: 500,
-    skin: 'oxide-dark',
-    content_css: 'dark',
-    plugins: 'lists link image code codesample table blockquote hr fullscreen preview',
-    toolbar: 'undo redo | blocks | bold italic underline strikethrough | forecolor backcolor | alignleft aligncenter alignright | bullist numlist | codesample blockquote | link image table hr | code fullscreen',
-    codesample_languages: [
-        { text: 'Python', value: 'python' },
-        { text: 'SQL', value: 'sql' },
-        { text: 'Bash', value: 'bash' },
-        { text: 'JavaScript', value: 'javascript' },
-        { text: 'Java', value: 'java' },
-        { text: 'Scala', value: 'scala' },
-        { text: 'YAML', value: 'yaml' },
-        { text: 'JSON', value: 'json' },
-        { text: 'HTML', value: 'markup' },
-        { text: 'CSS', value: 'css' },
-    ],
-    block_formats: 'Paragraph=p; Heading 2=h2; Heading 3=h3; Heading 4=h4; Preformatted=pre',
-    content_style: `
-        body {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 16px;
-            color: #e2e8f0;
-            background: #0f0f23;
-            line-height: 1.8;
-            padding: 1rem;
-        }
-        pre { background: #0d1117; padding: 1rem; border-radius: 8px; border: 1px solid #30363d; }
-        code { font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #e6edf3; }
-        blockquote { border-left: 3px solid #8b5cf6; padding-left: 1rem; color: #a78bfa; }
-        h2 { color: #f0c040; }
-        h3 { color: #c4b5fd; }
-    `,
-    menubar: false,
-    branding: false,
-    promotion: false,
-    statusbar: true,
-    resize: true,
+var quill = new Quill('#editor', {
+    theme: 'snow',
     placeholder: 'Start writing your cosmic wisdom...',
+    modules: {
+        syntax: { hljs: hljs },
+        toolbar: [
+            [{ 'header': [2, 3, 4, false] }],
+            ['bold', 'italic', 'underline', 'strike'],
+            [{ 'color': [] }, { 'background': [] }],
+            [{ 'align': [] }],
+            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+            ['blockquote', 'code-block'],
+            ['link', 'image'],
+            ['clean']
+        ]
+    }
+});
+
+// Sync editor content to hidden field on submit
+document.getElementById('post-form').addEventListener('submit', function() {
+    document.getElementById('id_body').value = quill.root.innerHTML;
 });
 </script>
 {% endblock %}

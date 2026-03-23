@@ -3,6 +3,59 @@
 
 {% block title %}Submit a Post | {{ site_name }}{% endblock %}
 
+{% block extra_css %}
+<link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet">
+<style>
+    .ql-toolbar.ql-snow {
+        background: rgba(139,92,246,0.1) !important;
+        border: 1px solid rgba(139,92,246,0.3) !important;
+        border-radius: 10px 10px 0 0 !important;
+    }
+    .ql-toolbar .ql-stroke { stroke: #a78bfa !important; }
+    .ql-toolbar .ql-fill { fill: #a78bfa !important; }
+    .ql-toolbar .ql-picker-label { color: #a78bfa !important; }
+    .ql-toolbar button:hover .ql-stroke { stroke: #f0c040 !important; }
+    .ql-toolbar button.ql-active .ql-stroke { stroke: #f0c040 !important; }
+    .ql-toolbar .ql-picker-options { background: #1a1a3e !important; border-color: rgba(139,92,246,0.3) !important; }
+    .ql-toolbar .ql-picker-item { color: #c4b5fd !important; }
+
+    .ql-container.ql-snow {
+        border: 1px solid rgba(139,92,246,0.3) !important;
+        border-top: none !important;
+        border-radius: 0 0 10px 10px !important;
+        background: #0d1117;
+        min-height: 300px;
+        font-size: 1rem;
+    }
+    .ql-editor {
+        color: #e2e8f0;
+        font-family: 'Space Grotesk', sans-serif;
+        line-height: 1.8;
+        min-height: 300px;
+    }
+    .ql-editor.ql-blank::before { color: #6b7280 !important; font-style: normal !important; }
+    .ql-editor h2 { color: #f0c040; }
+    .ql-editor h3 { color: #c4b5fd; }
+    .ql-editor blockquote { border-left: 3px solid #8b5cf6; padding-left: 1rem; color: #a78bfa; }
+    .ql-editor pre.ql-syntax {
+        background: #161b22 !important; color: #e6edf3 !important;
+        border: 1px solid rgba(139,92,246,0.3); border-radius: 8px;
+        padding: 1rem; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;
+    }
+    .ql-editor code {
+        background: rgba(139,92,246,0.15); color: #c4b5fd;
+        padding: 0.1rem 0.3rem; border-radius: 4px;
+    }
+    .ql-snow .ql-tooltip {
+        background: #1a1a3e !important; border-color: rgba(139,92,246,0.3) !important;
+        color: #e2e8f0 !important;
+    }
+    .ql-snow .ql-tooltip input[type="text"] {
+        background: #0d1117 !important; color: #e2e8f0 !important;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="section" style="padding-top: 120px;">
     <div class="section-container" style="max-width: 800px;">
@@ -14,7 +67,7 @@
             Your post will be reviewed and published once approved.
         </p>
 
-        <form method="post" enctype="multipart/form-data" class="cosmic-form">
+        <form method="post" enctype="multipart/form-data" id="post-form" class="cosmic-form">
             {% csrf_token %}
             <div class="form-group">
                 <label class="form-label">Title</label>
@@ -27,7 +80,8 @@
             </div>
             <div class="form-group">
                 <label class="form-label">Your Post</label>
-                <textarea name="body" id="id_body" class="cosmic-input" rows="15">{{ form.body.value|default:'' }}</textarea>
+                <div id="editor"></div>
+                <input type="hidden" name="body" id="id_body">
                 {% if form.body.errors %}<p class="form-error">{{ form.body.errors.0 }}</p>{% endif %}
             </div>
             <div class="form-group">
@@ -41,38 +95,30 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/sql.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js"></script>
 <script>
-tinymce.init({
-    selector: '#id_body',
-    height: 400,
-    skin: 'oxide-dark',
-    content_css: 'dark',
-    plugins: 'lists link codesample blockquote',
-    toolbar: 'undo redo | blocks | bold italic | bullist numlist | codesample blockquote link',
-    codesample_languages: [
-        { text: 'Python', value: 'python' },
-        { text: 'SQL', value: 'sql' },
-        { text: 'Bash', value: 'bash' },
-        { text: 'JavaScript', value: 'javascript' },
-    ],
-    content_style: `
-        body {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 16px;
-            color: #e2e8f0;
-            background: #0f0f23;
-            line-height: 1.8;
-            padding: 1rem;
-        }
-        pre { background: #0d1117; padding: 1rem; border-radius: 8px; }
-        code { font-family: monospace; }
-        blockquote { border-left: 3px solid #8b5cf6; padding-left: 1rem; color: #a78bfa; }
-    `,
-    menubar: false,
-    branding: false,
-    promotion: false,
+var quill = new Quill('#editor', {
+    theme: 'snow',
     placeholder: 'Start writing your cosmic wisdom...',
+    modules: {
+        syntax: { hljs: hljs },
+        toolbar: [
+            [{ 'header': [2, 3, false] }],
+            ['bold', 'italic', 'underline'],
+            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+            ['blockquote', 'code-block'],
+            ['link', 'image'],
+            ['clean']
+        ]
+    }
+});
+
+document.getElementById('post-form').addEventListener('submit', function() {
+    document.getElementById('id_body').value = quill.root.innerHTML;
 });
 </script>
 {% endblock %}
