@@ -299,7 +299,7 @@
     // Create toggle button
     const toggleBtn = document.createElement('button');
     toggleBtn.className = 'reading-mode-toggle';
-    toggleBtn.innerHTML = '<span class="toggle-icon">&#9776;</span> <span class="toggle-label">Page Mode</span>';
+    toggleBtn.innerHTML = '<span class="toggle-icon">📜</span> <span class="toggle-label">Scroll Mode</span>';
     toggleBtn.title = 'Switch between scroll and page reading mode';
     document.body.appendChild(toggleBtn);
 
@@ -365,6 +365,7 @@
         currentPage = 0;
         document.body.classList.add('page-mode-active');
         toggleBtn.classList.add('active');
+        toggleBtn.querySelector('.toggle-icon').textContent = '📜';
         toggleBtn.querySelector('.toggle-label').textContent = 'Scroll Mode';
 
         splitIntoPages();
@@ -398,6 +399,7 @@
         pageMode = false;
         document.body.classList.remove('page-mode-active');
         toggleBtn.classList.remove('active');
+        toggleBtn.querySelector('.toggle-icon').textContent = '📖';
         toggleBtn.querySelector('.toggle-label').textContent = 'Page Mode';
 
         if (!slideWrapper) return;
@@ -447,6 +449,11 @@
 
     navPrev.addEventListener('click', function () { goToPage(currentPage - 1); });
     navNext.addEventListener('click', function () { goToPage(currentPage + 1); });
+
+    // AUTO-ENABLE PAGE MODE on load
+    setTimeout(function () {
+        enablePageMode();
+    }, 800);
 
     // Keyboard navigation
     document.addEventListener('keydown', function (e) {
