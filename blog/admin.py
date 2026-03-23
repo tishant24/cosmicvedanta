@@ -57,22 +57,43 @@ class UserPostAdmin(admin.ModelAdmin):
         ('Review', {'fields': ('status', 'admin_note')}),
     )
 
+    def save_model(self, request, obj, form, change):
+        """When admin saves with status=approved, auto-create a published Post."""
+        super().save_model(request, obj, form, change)
+        if obj.status == 'approved':
+            # Check if Post already exists for this UserPost
+            slug = slugify(obj.title)
+            if not Post.objects.filter(slug=slug).exists():
+                post = Post(
+                    title=obj.title,
+                    slug=slug,
+                    author=obj.author,
+                    category=obj.category,
+                    body=obj.body,
+                    excerpt=obj.body[:200],
+                    status='published',
+                )
+                if obj.image:
+                    post.featured_image = obj.image
+                post.save()
+
     @admin.action(description='Approve selected posts')
     def approve_posts(self, request, queryset):
         for user_post in queryset.filter(status='pending'):
-            # Create a real Post from the user submission
-            post = Post(
-                title=user_post.title,
-                slug=slugify(user_post.title),
-                author=user_post.author,
-                category=user_post.category,
-                body=user_post.body,
-                excerpt=user_post.body[:200],
-                status='published',
-            )
-            if user_post.image:
-                post.featured_image = user_post.image
-            post.save()
+            slug = slugify(user_post.title)
+            if not Post.objects.filter(slug=slug).exists():
+                post = Post(
+                    title=user_post.title,
+                    slug=slug,
+                    author=user_post.author,
+                    category=user_post.category,
+                    body=user_post.body,
+                    excerpt=user_post.body[:200],
+                    status='published',
+                )
+                if user_post.image:
+                    post.featured_image = user_post.image
+                post.save()
             user_post.status = 'approved'
             user_post.save()
 
