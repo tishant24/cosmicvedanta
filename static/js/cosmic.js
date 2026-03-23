@@ -204,13 +204,46 @@
             navLinks.classList.toggle('active');
         });
 
-        // Close nav when clicking a link
+        // Close nav when clicking a real link (not dropdown triggers)
         navLinks.querySelectorAll('a').forEach(function (link) {
-            link.addEventListener('click', function () {
-                navLinks.classList.remove('active');
-            });
+            if (!link.classList.contains('dropdown-trigger')) {
+                link.addEventListener('click', function () {
+                    navLinks.classList.remove('active');
+                    // Also close any open dropdowns
+                    document.querySelectorAll('.nav-dropdown.open').forEach(function (d) {
+                        d.classList.remove('open');
+                    });
+                });
+            }
         });
     }
+
+    // ── Dropdown Toggle (works on both mobile & desktop click) ──
+    document.querySelectorAll('.dropdown-trigger').forEach(function (trigger) {
+        trigger.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var parent = this.closest('.nav-dropdown');
+            var isOpen = parent.classList.contains('open');
+
+            // Close all other dropdowns
+            document.querySelectorAll('.nav-dropdown.open').forEach(function (d) {
+                d.classList.remove('open');
+            });
+
+            // Toggle this one
+            if (!isOpen) {
+                parent.classList.add('open');
+            }
+        });
+    });
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function () {
+        document.querySelectorAll('.nav-dropdown.open').forEach(function (d) {
+            d.classList.remove('open');
+        });
+    });
 
 
     // ── Scroll-based nav background ──
