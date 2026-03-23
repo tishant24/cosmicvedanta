@@ -4,6 +4,7 @@ from django.conf import settings
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.text import slugify
+from .formatter import format_plain_text
 
 
 class Category(models.Model):
@@ -51,7 +52,8 @@ class Post(models.Model):
     )
     featured_image = models.ImageField(upload_to='posts/%Y/%m/', blank=True)
     excerpt = models.TextField(max_length=500, blank=True, help_text='Short summary for SEO and cards.')
-    body = models.TextField(help_text='Main article content. Supports HTML.')
+    body = models.TextField(help_text='Write plain text — it auto-formats to styled HTML. Or use HTML directly.')
+    body_raw = models.TextField(blank=True, help_text='Original plain text (auto-saved).')
 
     # Philosophy integration
     vedanta_quote = models.TextField(
@@ -90,6 +92,12 @@ class Post(models.Model):
             self.slug = slugify(self.title)
         if self.status == 'published' and not self.published_at:
             self.published_at = timezone.now()
+        # Auto-format plain text to styled HTML
+        from .formatter import is_plain_text
+        if is_plain_text(self.body):
+            self.body_raw = self.body
+            cat_slug = self.category.slug if self.category else None
+            self.body = format_plain_text(self.body, cat_slug)
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
@@ -100,6 +108,23 @@ class Post(models.Model):
 
     def get_seo_description(self):
         return self.meta_description or self.excerpt or self.body[:157] + '...'
+
+    @property
+    def category_theme(self):
+        """Return CSS theme class based on category."""
+        if not self.category:
+            return 'theme-cosmos'
+        slug = self.category.slug
+        theme_map = {
+            'cosmos': 'theme-cosmos',
+            'vedanta': 'theme-vedanta',
+            'simulation-theory': 'theme-simulation',
+            'machine-learning': 'theme-study',
+            'study-notes': 'theme-study',
+            'data-engineering': 'theme-study',
+            'physics': 'theme-study',
+        }
+        return theme_map.get(slug, 'theme-cosmos')
 
 
 class Comment(models.Model):

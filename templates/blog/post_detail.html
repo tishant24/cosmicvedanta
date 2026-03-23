@@ -13,13 +13,14 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/hypnotic.css' %}">
+<link rel="stylesheet" href="{% static 'css/themes.css' %}">
 {% endblock %}
 
 {% block content %}
-<!-- Hypnotic Consciousness Canvas -->
+<!-- Category-specific Canvas -->
 <canvas id="consciousness-bg"></canvas>
 
-<article class="post-detail">
+<article class="post-detail {{ post.category_theme }}">
     <header class="post-header">
         <div class="section-container">
             {% if post.category %}

@@ -21,7 +21,7 @@ class PostAdmin(admin.ModelAdmin):
 
     fieldsets = (
         (None, {'fields': ('title', 'slug', 'author', 'category', 'status')}),
-        ('Content', {'fields': ('featured_image', 'excerpt', 'body')}),
+        ('Content', {'fields': ('featured_image', 'excerpt', 'body', 'body_raw')}),
         ('Philosophy', {'fields': ('vedanta_quote', 'vedanta_source'), 'classes': ('collapse',)}),
         ('SEO', {'fields': ('meta_title', 'meta_description', 'meta_keywords'), 'classes': ('collapse',)}),
         ('Settings', {'fields': ('is_featured', 'is_premium', 'published_at')}),
