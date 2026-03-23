@@ -53,11 +53,16 @@
 
             <ul class="nav-links">
                 <li><a href="{% url 'blog:home' %}" class="{% if request.path == '/' %}active{% endif %}">Universe Feed</a></li>
-                <li><a href="{% url 'blog:category' slug='cosmos' %}" class="{% if '/category/cosmos/' in request.path %}active{% endif %}">Cosmos</a></li>
-                <li><a href="{% url 'blog:category' slug='vedanta' %}" class="{% if '/category/vedanta/' in request.path %}active{% endif %}">Vedanta</a></li>
-                <li><a href="{% url 'blog:category' slug='simulation-theory' %}" class="{% if '/category/simulation-theory/' in request.path %}active{% endif %}">Simulation Theory</a></li>
-                <li><a href="{% url 'blog:category' slug='machine-learning' %}" class="{% if '/category/machine-learning/' in request.path %}active{% endif %}">Machine Learning</a></li>
-                <li><a href="{% url 'blog:category' slug='ancient-philosophy' %}" class="{% if '/category/ancient-philosophy/' in request.path %}active{% endif %}">Ancient Philosophy</a></li>
+                <li class="nav-dropdown">
+                    <a href="#" class="dropdown-trigger {% if '/category/' in request.path %}active{% endif %}">Explore ▾</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{% url 'blog:category' slug='cosmos' %}">🌌 Cosmos</a></li>
+                        <li><a href="{% url 'blog:category' slug='vedanta' %}">🕉️ Vedanta</a></li>
+                        <li><a href="{% url 'blog:category' slug='simulation-theory' %}">🧬 Simulation Theory</a></li>
+                        <li><a href="{% url 'blog:category' slug='machine-learning' %}">🤖 Machine Learning</a></li>
+                        <li><a href="{% url 'blog:category' slug='ancient-philosophy' %}">📿 Ancient Philosophy</a></li>
+                    </ul>
+                </li>
                 {% if user.is_authenticated %}
                 <li><a href="{% url 'blog:submit_post' %}" class="{% if request.path == '/submit/' %}active{% endif %}">Submit Post</a></li>
                 <li class="nav-dropdown">
