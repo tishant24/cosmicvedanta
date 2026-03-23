@@ -1565,3 +1565,115 @@ textarea.cosmic-input {
 .cosmic-btn-full {
     width: 100%;
 }
+
+/* ============================================================
+   Code Blocks & Syntax Highlighting
+   ============================================================ */
+
+.code-block {
+    margin: 1.5rem 0;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    background: #0d1117;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.code-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    background: rgba(139, 92, 246, 0.15);
+    border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.code-lang {
+    color: #c4b5fd;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.code-copy-btn {
+    background: rgba(139, 92, 246, 0.2);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    color: #a78bfa;
+    padding: 0.25rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.code-copy-btn:hover {
+    background: rgba(139, 92, 246, 0.4);
+    color: #fff;
+}
+
+.code-block pre {
+    margin: 0;
+    padding: 1.25rem;
+    overflow-x: auto;
+    background: #0d1117;
+}
+
+.code-block code {
+    font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace;
+    font-size: 0.85rem;
+    line-height: 1.7;
+    color: #e6edf3;
+    white-space: pre;
+    tab-size: 4;
+}
+
+.inline-code {
+    background: rgba(139, 92, 246, 0.15);
+    color: #c4b5fd;
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 0.85em;
+    border: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.hl-keyword {
+    color: #ff7b72;
+    font-weight: 600;
+}
+
+.hl-string {
+    color: #a5d6ff;
+}
+
+.hl-comment {
+    color: #8b949e;
+    font-style: italic;
+}
+
+.hl-decorator {
+    color: #d2a8ff;
+    font-weight: 600;
+}
+
+.hl-function {
+    color: #d2a8ff;
+}
+
+.hl-number {
+    color: #79c0ff;
+}
+
+.code-block pre::-webkit-scrollbar {
+    height: 6px;
+}
+
+.code-block pre::-webkit-scrollbar-track {
+    background: #161b22;
+}
+
+.code-block pre::-webkit-scrollbar-thumb {
+    background: rgba(139, 92, 246, 0.3);
+    border-radius: 3px;
+}

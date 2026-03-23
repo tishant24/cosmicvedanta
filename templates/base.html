@@ -144,6 +144,22 @@
     </div>
 
     <script src="{% static 'js/cosmic.js' %}"></script>
+    <script>
+    function copyCode(btn) {
+        var code = btn.closest('.code-block').querySelector('code');
+        var text = code.innerText || code.textContent;
+        navigator.clipboard.writeText(text).then(function() {
+            btn.textContent = 'Copied!';
+            btn.style.background = 'rgba(16,185,129,0.3)';
+            btn.style.color = '#10b981';
+            setTimeout(function() {
+                btn.textContent = 'Copy';
+                btn.style.background = '';
+                btn.style.color = '';
+            }, 2000);
+        });
+    }
+    </script>
     {% block extra_js %}{% endblock %}
 </body>
 </html>
