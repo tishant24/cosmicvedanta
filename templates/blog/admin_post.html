@@ -3,46 +3,167 @@
 
 {% block title %}Publish New Post | CosmicVedanta{% endblock %}
 
+{% block extra_css %}
+<style>
+    .post-form-container { max-width: 900px; margin: 0 auto; }
+    .form-group { margin-bottom: 1.5rem; }
+    .form-label {
+        display: block;
+        color: #c4b5fd;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        font-size: 0.95rem;
+    }
+    .form-label .required { color: #f59e0b; }
+    .form-hint {
+        color: #6b7280;
+        font-size: 0.8rem;
+        margin-top: 0.3rem;
+    }
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+    }
+    @media (max-width: 600px) {
+        .form-row { grid-template-columns: 1fr; }
+    }
+    .checkbox-label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #c4b5fd;
+        cursor: pointer;
+    }
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+    .tox-tinymce { border-radius: 8px !important; border-color: rgba(139,92,246,0.3) !important; }
+</style>
+{% endblock %}
+
 {% block content %}
 <section class="section">
-    <div class="section-container" style="max-width: 800px; margin: 0 auto;">
-        <h1 class="section-title" style="margin-bottom: 2rem;">
+    <div class="section-container post-form-container">
+        <h1 class="section-title" style="margin-bottom: 0.5rem;">
             <span class="title-ornament">&#10038;</span> Publish New Post
         </h1>
+        <p style="color: #9ca3af; margin-bottom: 2rem;">Write naturally — format with the editor toolbar. Your post goes live instantly.</p>
 
-        <p style="color: #9ca3af; margin-bottom: 2rem;">As admin, your post will go live instantly. Just write in plain text — it auto-formats beautifully!</p>
-
-        <form method="post" enctype="multipart/form-data" class="submit-form">
+        <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
 
-            {% for field in form %}
-            <div style="margin-bottom: 1.5rem;">
-                <label style="display: block; color: #c4b5fd; margin-bottom: 0.5rem; font-weight: 600;">
-                    {{ field.label }}
-                    {% if field.field.required %}<span style="color: #f59e0b;">*</span>{% endif %}
-                </label>
-                {{ field }}
-                {% if field.help_text %}
-                <small style="color: #6b7280; display: block; margin-top: 0.3rem;">{{ field.help_text }}</small>
-                {% endif %}
-                {% for error in field.errors %}
-                <small style="color: #ef4444;">{{ error }}</small>
-                {% endfor %}
+            <!-- Title -->
+            <div class="form-group">
+                <label class="form-label">Title <span class="required">*</span></label>
+                {{ form.title }}
             </div>
+
+            <!-- Category + Featured -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Category <span class="required">*</span></label>
+                    {{ form.category }}
+                </div>
+                <div class="form-group" style="display: flex; align-items: end; padding-bottom: 0.5rem;">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="is_featured"> Feature on homepage hero
+                    </label>
+                </div>
+            </div>
+
+            <!-- Body (Rich Editor) -->
+            <div class="form-group">
+                <label class="form-label">Body <span class="required">*</span></label>
+                <textarea name="body" id="id_body" class="cosmic-input" rows="20">{{ form.body.value|default:'' }}</textarea>
+                <p class="form-hint">Use the toolbar for bold, headings, code blocks, images, lists etc.</p>
+            </div>
+
+            <!-- Excerpt -->
+            <div class="form-group">
+                <label class="form-label">Excerpt</label>
+                {{ form.excerpt }}
+                <p class="form-hint">Short summary for cards & SEO. Auto-generated if blank.</p>
+            </div>
+
+            <!-- Featured Image -->
+            <div class="form-group">
+                <label class="form-label">Featured Image</label>
+                {{ form.featured_image }}
+            </div>
+
+            <!-- Vedanta Quote -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Vedanta Quote</label>
+                    {{ form.vedanta_quote }}
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Quote Source</label>
+                    {{ form.vedanta_source }}
+                </div>
+            </div>
+
+            {% for error in form.non_field_errors %}
+            <p style="color: #ef4444;">{{ error }}</p>
             {% endfor %}
 
-            <div style="margin-top: 1rem;">
-                <label style="color: #c4b5fd;">
-                    <input type="checkbox" name="is_featured" style="margin-right: 0.5rem;">
-                    Feature on homepage hero
-                </label>
-            </div>
-
-            <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+            <div class="form-actions">
                 <button type="submit" class="cosmic-btn">Publish Now</button>
                 <a href="{% url 'blog:home' %}" class="cosmic-btn" style="background: transparent; border: 1px solid #6b7280;">Cancel</a>
             </div>
         </form>
     </div>
 </section>
+{% endblock %}
+
+{% block extra_js %}
+<!-- TinyMCE CDN -->
+<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+<script>
+tinymce.init({
+    selector: '#id_body',
+    height: 500,
+    skin: 'oxide-dark',
+    content_css: 'dark',
+    plugins: 'lists link image code codesample table blockquote hr fullscreen preview',
+    toolbar: 'undo redo | blocks | bold italic underline strikethrough | forecolor backcolor | alignleft aligncenter alignright | bullist numlist | codesample blockquote | link image table hr | code fullscreen',
+    codesample_languages: [
+        { text: 'Python', value: 'python' },
+        { text: 'SQL', value: 'sql' },
+        { text: 'Bash', value: 'bash' },
+        { text: 'JavaScript', value: 'javascript' },
+        { text: 'Java', value: 'java' },
+        { text: 'Scala', value: 'scala' },
+        { text: 'YAML', value: 'yaml' },
+        { text: 'JSON', value: 'json' },
+        { text: 'HTML', value: 'markup' },
+        { text: 'CSS', value: 'css' },
+    ],
+    block_formats: 'Paragraph=p; Heading 2=h2; Heading 3=h3; Heading 4=h4; Preformatted=pre',
+    content_style: `
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 16px;
+            color: #e2e8f0;
+            background: #0f0f23;
+            line-height: 1.8;
+            padding: 1rem;
+        }
+        pre { background: #0d1117; padding: 1rem; border-radius: 8px; border: 1px solid #30363d; }
+        code { font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #e6edf3; }
+        blockquote { border-left: 3px solid #8b5cf6; padding-left: 1rem; color: #a78bfa; }
+        h2 { color: #f0c040; }
+        h3 { color: #c4b5fd; }
+    `,
+    menubar: false,
+    branding: false,
+    promotion: false,
+    statusbar: true,
+    resize: true,
+    placeholder: 'Start writing your cosmic wisdom...',
+});
+</script>
 {% endblock %}

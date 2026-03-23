@@ -5,7 +5,7 @@
 
 {% block content %}
 <div class="section" style="padding-top: 120px;">
-    <div class="section-container" style="max-width: 700px;">
+    <div class="section-container" style="max-width: 800px;">
         <h2 class="section-title">
             <span class="title-ornament">&#10022;</span> Share Your Cosmic Insight
         </h2>
@@ -27,7 +27,7 @@
             </div>
             <div class="form-group">
                 <label class="form-label">Your Post</label>
-                {{ form.body }}
+                <textarea name="body" id="id_body" class="cosmic-input" rows="15">{{ form.body.value|default:'' }}</textarea>
                 {% if form.body.errors %}<p class="form-error">{{ form.body.errors.0 }}</p>{% endif %}
             </div>
             <div class="form-group">
@@ -38,4 +38,41 @@
         </form>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+<script>
+tinymce.init({
+    selector: '#id_body',
+    height: 400,
+    skin: 'oxide-dark',
+    content_css: 'dark',
+    plugins: 'lists link codesample blockquote',
+    toolbar: 'undo redo | blocks | bold italic | bullist numlist | codesample blockquote link',
+    codesample_languages: [
+        { text: 'Python', value: 'python' },
+        { text: 'SQL', value: 'sql' },
+        { text: 'Bash', value: 'bash' },
+        { text: 'JavaScript', value: 'javascript' },
+    ],
+    content_style: `
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 16px;
+            color: #e2e8f0;
+            background: #0f0f23;
+            line-height: 1.8;
+            padding: 1rem;
+        }
+        pre { background: #0d1117; padding: 1rem; border-radius: 8px; }
+        code { font-family: monospace; }
+        blockquote { border-left: 3px solid #8b5cf6; padding-left: 1rem; color: #a78bfa; }
+    `,
+    menubar: false,
+    branding: false,
+    promotion: false,
+    placeholder: 'Start writing your cosmic wisdom...',
+});
+</script>
 {% endblock %}

@@ -92,9 +92,9 @@ class Post(models.Model):
             self.slug = slugify(self.title)
         if self.status == 'published' and not self.published_at:
             self.published_at = timezone.now()
-        # Auto-format plain text to styled HTML
+        # Auto-format only plain text (skip if HTML from rich editor)
         from .formatter import is_plain_text
-        if is_plain_text(self.body):
+        if self.body and is_plain_text(self.body):
             self.body_raw = self.body
             cat_slug = self.category.slug if self.category else None
             self.body = format_plain_text(self.body, cat_slug)

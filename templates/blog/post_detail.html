@@ -14,6 +14,32 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/hypnotic.css' %}">
 <link rel="stylesheet" href="{% static 'css/themes.css' %}">
+<!-- Prism.js for code syntax highlighting -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+<style>
+    /* Override Prism theme for cosmic look */
+    pre[class*="language-"] {
+        background: #0d1117 !important;
+        border: 1px solid rgba(139,92,246,0.3);
+        border-radius: 10px;
+        padding: 1.25rem;
+        margin: 1.5rem 0;
+        font-size: 0.85rem;
+        line-height: 1.7;
+    }
+    code[class*="language-"] {
+        font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+        font-size: 0.85rem;
+    }
+    :not(pre) > code {
+        background: rgba(139,92,246,0.15);
+        color: #c4b5fd;
+        padding: 0.15rem 0.4rem;
+        border-radius: 4px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.85em;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -250,4 +276,13 @@ function toggleReplyForm(commentId) {
 }
 </script>
 <script src="{% static 'js/hypnotic.js' %}"></script>
+<!-- Prism.js for code highlighting -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-scala.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
 {% endblock %}
