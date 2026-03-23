@@ -1,6 +1,7 @@
 """Admin configuration for blog models."""
 from django.contrib import admin
-from .models import Category, Post, Comment, AffiliateLink
+from django.utils.text import slugify
+from .models import Category, Post, Comment, AffiliateLink, UserPost
 
 
 @admin.register(Category)
@@ -29,7 +30,7 @@ class PostAdmin(admin.ModelAdmin):
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ('author', 'post', 'is_approved', 'created_at', 'parent')
+    list_display = ('author', 'post', 'is_approved', 'is_edited', 'created_at', 'parent')
     list_filter = ('is_approved', 'created_at')
     search_fields = ('body', 'author__email', 'author__display_name')
     actions = ['approve_comments', 'reject_comments']
@@ -41,6 +42,43 @@ class CommentAdmin(admin.ModelAdmin):
     @admin.action(description='Reject selected comments')
     def reject_comments(self, request, queryset):
         queryset.update(is_approved=False)
+
+
+@admin.register(UserPost)
+class UserPostAdmin(admin.ModelAdmin):
+    list_display = ('title', 'author', 'category', 'status', 'created_at')
+    list_filter = ('status', 'category', 'created_at')
+    search_fields = ('title', 'body', 'author__email', 'author__display_name')
+    readonly_fields = ('author', 'title', 'body', 'image', 'category', 'created_at')
+    actions = ['approve_posts', 'reject_posts']
+
+    fieldsets = (
+        ('Submission', {'fields': ('author', 'title', 'category', 'body', 'image', 'created_at')}),
+        ('Review', {'fields': ('status', 'admin_note')}),
+    )
+
+    @admin.action(description='Approve selected posts')
+    def approve_posts(self, request, queryset):
+        for user_post in queryset.filter(status='pending'):
+            # Create a real Post from the user submission
+            post = Post(
+                title=user_post.title,
+                slug=slugify(user_post.title),
+                author=user_post.author,
+                category=user_post.category,
+                body=user_post.body,
+                excerpt=user_post.body[:200],
+                status='published',
+            )
+            if user_post.image:
+                post.featured_image = user_post.image
+            post.save()
+            user_post.status = 'approved'
+            user_post.save()
+
+    @admin.action(description='Reject selected posts')
+    def reject_posts(self, request, queryset):
+        queryset.update(status='rejected')
 
 
 @admin.register(AffiliateLink)

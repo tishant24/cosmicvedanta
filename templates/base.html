@@ -62,11 +62,20 @@
                         <li><a href="#">Cosmos</a></li>
                         <li><a href="#">Vedanta</a></li>
                         <li><a href="#">Simulation Theory</a></li>
+                        <li><a href="#">Machine Learning</a></li>
+                        <li><a href="#">Study Notes</a></li>
                         {% endfor %}
                     </ul>
                 </li>
                 {% if user.is_authenticated %}
-                <li><a href="{% url 'accounts:logout' %}">Logout</a></li>
+                <li><a href="{% url 'blog:submit_post' %}" class="{% if request.path == '/submit/' %}active{% endif %}">Submit Post</a></li>
+                <li class="nav-dropdown">
+                    <a href="#" class="dropdown-trigger">{{ user.get_short_name }}</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{% url 'blog:my_posts' %}">My Posts</a></li>
+                        <li><a href="{% url 'accounts:logout' %}">Logout</a></li>
+                    </ul>
+                </li>
                 {% else %}
                 <li><a href="{% url 'accounts:login' %}">Login</a></li>
                 <li><a href="{% url 'accounts:signup' %}" class="nav-cta">Join the Journey</a></li>

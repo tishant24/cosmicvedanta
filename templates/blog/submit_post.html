@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Submit a Post | {{ site_name }}{% endblock %}
+
+{% block content %}
+<div class="section" style="padding-top: 120px;">
+    <div class="section-container" style="max-width: 700px;">
+        <h2 class="section-title">
+            <span class="title-ornament">&#10022;</span> Share Your Cosmic Insight
+        </h2>
+        <p class="text-secondary" style="margin-bottom: 2rem; text-align: center;">
+            Write about the cosmos, consciousness, philosophy, or anything that expands the mind.<br>
+            Your post will be reviewed and published once approved.
+        </p>
+
+        <form method="post" enctype="multipart/form-data" class="cosmic-form">
+            {% csrf_token %}
+            <div class="form-group">
+                <label class="form-label">Title</label>
+                {{ form.title }}
+                {% if form.title.errors %}<p class="form-error">{{ form.title.errors.0 }}</p>{% endif %}
+            </div>
+            <div class="form-group">
+                <label class="form-label">Category</label>
+                {{ form.category }}
+            </div>
+            <div class="form-group">
+                <label class="form-label">Your Post</label>
+                {{ form.body }}
+                {% if form.body.errors %}<p class="form-error">{{ form.body.errors.0 }}</p>{% endif %}
+            </div>
+            <div class="form-group">
+                <label class="form-label">Image (optional)</label>
+                {{ form.image }}
+            </div>
+            <button type="submit" class="cosmic-btn cosmic-btn-full">Submit for Review</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

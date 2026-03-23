@@ -174,10 +174,23 @@
                             <span class="comment-time">{{ comment.created_at|naturaltime }}</span>
                         </div>
                     </div>
-                    <div class="comment-body">{{ comment.body|linebreaks }}</div>
+                    <div class="comment-body">
+                        {{ comment.body|linebreaks }}
+                        {% if comment.is_edited %}<span class="comment-edited">(edited)</span>{% endif %}
+                    </div>
 
-                    {% if user.is_authenticated %}
-                    <button class="reply-toggle" onclick="toggleReplyForm({{ comment.pk }})">Reply</button>
+                    <div class="comment-actions">
+                        {% if user.is_authenticated %}
+                        <button class="reply-toggle" onclick="toggleReplyForm({{ comment.pk }})">Reply</button>
+                        {% endif %}
+                        {% if user == comment.author %}
+                        <a href="{% url 'blog:edit_comment' comment_id=comment.pk %}" class="comment-action-btn">Edit</a>
+                        <form method="post" action="{% url 'blog:delete_comment' comment_id=comment.pk %}" style="display:inline;" onsubmit="return confirm('Delete this comment?')">
+                            {% csrf_token %}
+                            <button type="submit" class="comment-action-btn comment-delete-btn">Delete</button>
+                        </form>
+                        {% endif %}
+                    </div>
                     <div class="reply-form-wrapper" id="reply-form-{{ comment.pk }}" style="display: none;">
                         <form method="post" action="{% url 'blog:add_comment' slug=post.slug %}" class="comment-form reply-form">
                             {% csrf_token %}
@@ -198,7 +211,19 @@
                                 <span class="comment-time">{{ reply.created_at|naturaltime }}</span>
                             </div>
                         </div>
-                        <div class="comment-body">{{ reply.body|linebreaks }}</div>
+                        <div class="comment-body">
+                            {{ reply.body|linebreaks }}
+                            {% if reply.is_edited %}<span class="comment-edited">(edited)</span>{% endif %}
+                        </div>
+                        {% if user == reply.author %}
+                        <div class="comment-actions">
+                            <a href="{% url 'blog:edit_comment' comment_id=reply.pk %}" class="comment-action-btn">Edit</a>
+                            <form method="post" action="{% url 'blog:delete_comment' comment_id=reply.pk %}" style="display:inline;" onsubmit="return confirm('Delete this reply?')">
+                                {% csrf_token %}
+                                <button type="submit" class="comment-action-btn comment-delete-btn">Delete</button>
+                            </form>
+                        </div>
+                        {% endif %}
                     </div>
                     {% endfor %}
                 </div>

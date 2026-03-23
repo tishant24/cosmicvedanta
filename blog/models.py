@@ -113,6 +113,7 @@ class Comment(models.Model):
     )
     body = models.TextField(max_length=2000)
     is_approved = models.BooleanField(default=True)
+    is_edited = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -128,6 +129,36 @@ class Comment(models.Model):
 
     def get_replies(self):
         return Comment.objects.filter(parent=self, is_approved=True)
+
+
+class UserPost(models.Model):
+    """Community-submitted posts that require admin approval."""
+
+    STATUS_CHOICES = [
+        ('pending', 'Pending Review'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected'),
+    ]
+
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='user_posts',
+    )
+    title = models.CharField(max_length=250)
+    category = models.ForeignKey(
+        Category, on_delete=models.SET_NULL, null=True, blank=True,
+    )
+    body = models.TextField(help_text='Your post content.')
+    image = models.ImageField(upload_to='user_posts/%Y/%m/', blank=True)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
+    admin_note = models.TextField(blank=True, help_text='Reason for rejection (shown to user).')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f'{self.title} by {self.author}'
 
 
 class AffiliateLink(models.Model):

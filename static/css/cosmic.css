@@ -1470,3 +1470,97 @@ textarea.cosmic-input {
         padding: 1.5rem;
     }
 }
+
+/* ---------- Comment Actions ---------- */
+.comment-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+    align-items: center;
+}
+
+.comment-action-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    cursor: pointer;
+    padding: 0.2rem 0.5rem;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-ui);
+    text-decoration: none;
+    transition: color 0.2s, background 0.2s;
+}
+
+.comment-action-btn:hover {
+    color: var(--accent-violet);
+    background: rgba(167, 139, 250, 0.1);
+}
+
+.comment-delete-btn:hover {
+    color: var(--accent-rose);
+    background: rgba(244, 114, 182, 0.1);
+}
+
+.comment-edited {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+/* ---------- Status Badges ---------- */
+.status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-family: var(--font-ui);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+.status-pending {
+    background: rgba(240, 192, 64, 0.15);
+    color: var(--accent-gold);
+    border: 1px solid rgba(240, 192, 64, 0.3);
+}
+
+.status-approved {
+    background: rgba(34, 211, 238, 0.15);
+    color: var(--accent-cyan);
+    border: 1px solid rgba(34, 211, 238, 0.3);
+}
+
+.status-rejected {
+    background: rgba(244, 114, 182, 0.15);
+    color: var(--accent-rose);
+    border: 1px solid rgba(244, 114, 182, 0.3);
+}
+
+/* ---------- Form Styles ---------- */
+.cosmic-form .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    display: block;
+    color: var(--text-secondary);
+    font-family: var(--font-ui);
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.form-error {
+    color: var(--accent-rose);
+    font-size: 0.8rem;
+    margin-top: 0.3rem;
+}
+
+.cosmic-btn-full {
+    width: 100%;
+}

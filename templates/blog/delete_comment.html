@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Delete Comment | {{ site_name }}{% endblock %}
+
+{% block content %}
+<div class="section" style="padding-top: 120px;">
+    <div class="section-container" style="max-width: 600px;">
+        <h2 class="section-title">
+            <span class="title-ornament">&#9888;</span> Delete Comment
+        </h2>
+        <div class="sidebar-card" style="margin-bottom: 1.5rem;">
+            <p style="color: var(--text-secondary); margin-bottom: 0.5rem;">Your comment:</p>
+            <p>{{ comment.body }}</p>
+        </div>
+        <p style="color: var(--accent-rose); margin-bottom: 1.5rem;">Are you sure you want to delete this comment? This cannot be undone.</p>
+        <form method="post">
+            {% csrf_token %}
+            <div style="display: flex; gap: 1rem;">
+                <button type="submit" class="cosmic-btn" style="background: var(--accent-rose);">Yes, Delete</button>
+                <a href="{{ comment.post.get_absolute_url }}#comment-{{ comment.pk }}" class="cosmic-btn" style="background: var(--bg-card);">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

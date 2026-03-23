@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Edit Comment | {{ site_name }}{% endblock %}
+
+{% block content %}
+<div class="section" style="padding-top: 120px;">
+    <div class="section-container" style="max-width: 600px;">
+        <h2 class="section-title">
+            <span class="title-ornament">&#9998;</span> Edit Comment
+        </h2>
+        <p class="text-secondary" style="margin-bottom: 1.5rem;">
+            On: <a href="{{ comment.post.get_absolute_url }}" style="color: var(--accent-violet);">{{ comment.post.title }}</a>
+        </p>
+        <form method="post" class="cosmic-form">
+            {% csrf_token %}
+            {{ form.body }}
+            <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                <button type="submit" class="cosmic-btn">Save Changes</button>
+                <a href="{{ comment.post.get_absolute_url }}#comment-{{ comment.pk }}" class="cosmic-btn" style="background: var(--bg-card);">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
