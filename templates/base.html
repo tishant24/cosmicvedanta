@@ -53,20 +53,10 @@
 
             <ul class="nav-links">
                 <li><a href="{% url 'blog:home' %}" class="{% if request.path == '/' %}active{% endif %}">Universe Feed</a></li>
-                <li class="nav-dropdown">
-                    <a href="#" class="dropdown-trigger">Explore</a>
-                    <ul class="dropdown-menu">
-                        {% for cat in categories %}
-                        <li><a href="{% url 'blog:category' slug=cat.slug %}">{{ cat.name }}</a></li>
-                        {% empty %}
-                        <li><a href="#">Cosmos</a></li>
-                        <li><a href="#">Vedanta</a></li>
-                        <li><a href="#">Simulation Theory</a></li>
-                        <li><a href="#">Machine Learning</a></li>
-                        <li><a href="#">Study Notes</a></li>
-                        {% endfor %}
-                    </ul>
-                </li>
+                <li><a href="{% url 'blog:category' slug='cosmos' %}">Cosmos</a></li>
+                <li><a href="{% url 'blog:category' slug='vedanta' %}">Vedanta</a></li>
+                <li><a href="{% url 'blog:category' slug='simulation-theory' %}">Simulation Theory</a></li>
+                <li><a href="{% url 'blog:category' slug='machine-learning' %}">Machine Learning</a></li>
                 {% if user.is_authenticated %}
                 <li><a href="{% url 'blog:submit_post' %}" class="{% if request.path == '/submit/' %}active{% endif %}">Submit Post</a></li>
                 <li class="nav-dropdown">
