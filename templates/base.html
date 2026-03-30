@@ -79,6 +79,20 @@
                 <li><a href="{% url 'accounts:login' %}">Login</a></li>
                 <li><a href="{% url 'accounts:signup' %}" class="nav-cta">Join the Journey</a></li>
                 {% endif %}
+                <!-- Language Switcher -->
+                <li class="lang-switcher">
+                    <select id="langSelect" onchange="changeLanguage(this.value)" title="Translate">
+                        <option value="">🌐 Lang</option>
+                        <option value="en">🇬🇧 English</option>
+                        <option value="hi">🇮🇳 हिन्दी</option>
+                        <option value="ru">🇷🇺 Русский</option>
+                        <option value="es">🇪🇸 Español</option>
+                        <option value="zh-CN">🇨🇳 中文</option>
+                        <option value="fr">🇫🇷 Français</option>
+                        <option value="ta">🇮🇳 தமிழ்</option>
+                        <option value="te">🇮🇳 తెలుగు</option>
+                    </select>
+                </li>
             </ul>
         </div>
     </nav>
@@ -167,5 +181,83 @@
     }
     </script>
     {% block extra_js %}{% endblock %}
+
+    <!-- Google Translate (hidden widget) -->
+    <div id="google_translate_element" style="display:none;"></div>
+    <script>
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({
+            pageLanguage: 'en',
+            includedLanguages: 'en,hi,ru,es,zh-CN,fr,ta,te',
+            autoDisplay: false
+        }, 'google_translate_element');
+    }
+
+    function changeLanguage(lang) {
+        if (!lang) return;
+
+        // Wait for Google Translate to load
+        var checkExist = setInterval(function() {
+            var selectEl = document.querySelector('.goog-te-combo');
+            if (selectEl) {
+                clearInterval(checkExist);
+                selectEl.value = lang;
+                selectEl.dispatchEvent(new Event('change'));
+            }
+        }, 100);
+
+        // Timeout after 5 seconds
+        setTimeout(function() { clearInterval(checkExist); }, 5000);
+    }
+
+    // Restore language selection from cookie
+    (function() {
+        var match = document.cookie.match(/googtrans=\/en\/([a-z\-]+)/);
+        if (match) {
+            var sel = document.getElementById('langSelect');
+            if (sel) sel.value = match[1];
+        }
+    })();
+    </script>
+    <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+    <style>
+    /* Hide Google Translate bar completely */
+    .goog-te-banner-frame, .skiptranslate, #goog-gt-tt,
+    .goog-te-balloon-frame, .goog-tooltip, .goog-tooltip:hover {
+        display: none !important;
+    }
+    body { top: 0 !important; }
+    .goog-text-highlight { background: none !important; box-shadow: none !important; }
+
+    /* Language switcher styling */
+    .lang-switcher select {
+        background: rgba(139, 92, 246, 0.15) !important;
+        border: 1px solid rgba(139, 92, 246, 0.4) !important;
+        color: #c4b5fd !important;
+        padding: 0.4rem 0.6rem !important;
+        border-radius: 8px !important;
+        font-size: 0.8rem !important;
+        font-family: 'Space Grotesk', sans-serif !important;
+        cursor: pointer !important;
+        width: auto !important;
+        min-width: 90px;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'%3E%3Cpath fill='%23a78bfa' d='M5 7L1 3h8z'/%3E%3C/svg%3E") !important;
+        background-repeat: no-repeat !important;
+        background-position: right 8px center !important;
+        padding-right: 24px !important;
+    }
+    .lang-switcher select:hover {
+        border-color: rgba(139, 92, 246, 0.8) !important;
+        box-shadow: 0 0 12px rgba(139, 92, 246, 0.2);
+    }
+    .lang-switcher select option {
+        background: #0a0a1e !important;
+        color: #e8e6f0 !important;
+    }
+    </style>
 </body>
 </html>
